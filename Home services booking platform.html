@@ -1,0 +1,2522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Home Services Booking Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,700;0,900;1,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────── TOKENS ─────────────────────── */
+:root{
+  --bg:#f7f8fc;--bg2:#ffffff;--bg3:#f1f3f9;
+  --panel:#ffffff;--panel2:#f7f8fc;
+  --border:#e4e8f0;--border2:#d0d6e8;
+  --blue:#2563eb;--blue2:#3b82f6;--blueg:rgba(37,99,235,.08);
+  --orange:#ea580c;--orangeg:rgba(234,88,12,.08);
+  --green:#16a34a;--greeng:rgba(22,163,74,.08);
+  --red:#dc2626;--yellow:#d97706;--teal:#0d9488;--purple:#7c3aed;
+  --text:#0f172a;--text2:#475569;--text3:#94a3b8;--text4:#cbd5e1;
+  --shadow:0 1px 3px rgba(15,23,42,.06),0 1px 2px rgba(15,23,42,.04);
+  --shadow2:0 4px 16px rgba(15,23,42,.08),0 2px 4px rgba(15,23,42,.04);
+  --shadow3:0 20px 48px rgba(15,23,42,.12),0 4px 8px rgba(15,23,42,.06);
+  --r:14px;--r2:10px;--r3:8px;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --serif:'Fraunces',serif;
+  --sidebar:248px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+
+/* ─────────────────────── LOGIN + OTP STYLES ─────────────────────── */
+#login-screen{
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(135deg,#f0f4ff 0%,#fdf0eb 50%,#f0fff4 100%);
+  display:flex;align-items:center;justify-content:center;padding:1rem;
+}
+#login-screen::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232563eb' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events:none;opacity:0.5;
+}
+#login-screen.gone{display:none;}
+.login-wrap{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:1fr 1fr;
+  max-width:920px;width:100%;
+  background:var(--panel);border-radius:24px;
+  box-shadow:var(--shadow3);border:1px solid var(--border);
+  overflow:hidden;
+  animation:loginPop .45s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes loginPop{from{opacity:0;transform:scale(.92) translateY(20px)}to{opacity:1;transform:none}}
+.login-left{
+  background:linear-gradient(145deg,#1e40af,#2563eb 40%,#7c3aed);
+  padding:3rem 2.5rem;display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.login-left::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.06);}
+.login-left::after{content:'';position:absolute;bottom:-40px;left:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.04);}
+.ll-brand{position:relative;z-index:1;}
+.ll-logo{font-family:var(--serif);font-size:1.75rem;font-weight:900;color:white;letter-spacing:-.5px;margin-bottom:.5rem;line-height:1.2;}
+.ll-logo em{font-style:italic;opacity:.75;}
+.ll-tagline{font-size:.82rem;color:rgba(255,255,255,.7);line-height:1.6;max-width:260px;}
+.ll-features{position:relative;z-index:1;}
+.ll-feat{display:flex;align-items:flex-start;gap:.75rem;margin-bottom:1.25rem;}
+.ll-feat-ic{width:36px;height:36px;border-radius:10px;flex-shrink:0;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.ll-feat-text h4{font-size:.8rem;font-weight:700;color:white;}
+.ll-feat-text p{font-size:.72rem;color:rgba(255,255,255,.6);line-height:1.45;}
+.ll-stats{position:relative;z-index:1;display:flex;gap:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.12);}
+.ll-stat .n{font-family:var(--serif);font-size:1.6rem;font-weight:900;color:white;}
+.ll-stat .l{font-size:.65rem;color:rgba(255,255,255,.6);font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+
+/* RIGHT PANEL */
+.login-right{padding:2.25rem 2rem;overflow-y:auto;max-height:90vh;}
+.lr-title{font-size:1.25rem;font-weight:800;margin-bottom:.2rem;letter-spacing:-.3px;}
+.lr-sub{font-size:.8rem;color:var(--text2);margin-bottom:1.5rem;}
+.tab-row{display:flex;gap:3px;background:var(--bg3);border-radius:10px;padding:3px;margin-bottom:1.5rem;border:1px solid var(--border);}
+.tab{flex:1;text-align:center;padding:.42rem .5rem;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer;color:var(--text3);transition:all .2s;border:1px solid transparent;}
+.tab.on{background:var(--panel);color:var(--text);border-color:var(--border);box-shadow:var(--shadow);}
+.fg{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.8rem;}
+.fg label{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);}
+.fi-w{position:relative;}
+.fi-w .ic{position:absolute;left:.8rem;top:50%;transform:translateY(-50%);font-size:.85rem;pointer-events:none;}
+.fi{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.62rem .875rem .62rem 2.4rem;font-family:var(--font);font-size:.84rem;color:var(--text);outline:none;transition:all .2s;}
+.fi:focus{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(37,99,235,.1);background:var(--panel);}
+.fi-eye{position:absolute;right:.8rem;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text3);font-size:.82rem;transition:color .15s;}
+.fi-eye:hover{color:var(--text);}
+.fi.no-ico{padding-left:.875rem;}
+.lerr{background:rgba(220,38,38,.05);border:1px solid rgba(220,38,38,.2);border-radius:9px;padding:.5rem .875rem;font-size:.74rem;color:var(--red);margin-bottom:.8rem;display:none;align-items:center;gap:.4rem;}
+.lerr.show{display:flex;}
+.lsuc{background:rgba(22,163,74,.05);border:1px solid rgba(22,163,74,.2);border-radius:9px;padding:.5rem .875rem;font-size:.74rem;color:var(--green);margin-bottom:.8rem;display:none;align-items:center;gap:.4rem;}
+.lsuc.show{display:flex;}
+.lbtn{width:100%;padding:.8rem;border-radius:11px;border:none;cursor:pointer;font-family:var(--font);font-size:.875rem;font-weight:800;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem;}
+.lbtn-c{background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;}
+.lbtn-c:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(37,99,235,.35);}
+.lbtn-w{background:linear-gradient(135deg,var(--teal),#0f766e);color:white;}
+.lbtn-w:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(13,148,136,.35);}
+.lbtn-a{background:linear-gradient(135deg,var(--orange),#c2410c);color:white;}
+.lbtn-a:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(234,88,12,.35);}
+.lbtn:disabled{opacity:.55;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
+.demo-hint{font-size:.67rem;color:var(--text3);text-align:center;margin-top:.75rem;}
+.demo-hint a{color:var(--blue2);cursor:pointer;font-weight:600;}
+.admin-lock{display:flex;align-items:center;gap:.5rem;background:rgba(234,88,12,.06);border:1px solid rgba(234,88,12,.15);border-radius:9px;padding:.5rem .875rem;margin-bottom:1rem;font-size:.73rem;color:var(--orange);font-weight:600;}
+
+/* ── OTP SPECIFIC ── */
+.step-indicator{display:flex;align-items:center;gap:.375rem;margin-bottom:1.375rem;}
+.si{display:flex;align-items:center;gap:.375rem;font-size:.72rem;font-weight:700;}
+.si-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;flex-shrink:0;}
+.si-num.done{background:var(--green);color:white;}
+.si-num.active{background:var(--blue);color:white;}
+.si-num.idle{background:var(--border);color:var(--text3);}
+.si-label{color:var(--text3);}
+.si-label.active{color:var(--text);font-weight:700;}
+.si-label.done{color:var(--green);}
+.si-sep{flex:1;height:2px;background:var(--border);border-radius:1px;}
+.si-sep.done{background:var(--green);}
+
+/* phone display row */
+.phone-display{
+  background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  padding:.6rem .875rem;display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:.8rem;font-size:.82rem;
+}
+.phone-display .num{font-weight:800;font-family:var(--mono);}
+.phone-display .change{font-size:.7rem;color:var(--blue2);cursor:pointer;font-weight:700;}
+.phone-display .change:hover{text-decoration:underline;}
+
+/* OTP boxes */
+.otp-row{display:flex;gap:.5rem;margin-bottom:.875rem;}
+.otp-box{
+  flex:1;height:54px;border-radius:10px;border:2px solid var(--border);
+  background:var(--bg3);text-align:center;font-size:1.5rem;font-weight:900;
+  color:var(--blue);font-family:var(--mono);outline:none;transition:all .2s;
+  caret-color:var(--blue);
+}
+.otp-box:focus{border-color:var(--blue2);background:var(--panel);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+.otp-box.filled{border-color:var(--blue);background:rgba(37,99,235,.04);}
+.otp-box.wrong{border-color:var(--red);background:rgba(220,38,38,.04);animation:shake .3s ease;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* resend timer */
+.resend-row{text-align:center;font-size:.72rem;color:var(--text3);margin-bottom:.75rem;}
+.resend-link{color:var(--blue2);cursor:pointer;font-weight:700;}
+.resend-link:hover{text-decoration:underline;}
+.resend-link.disabled{color:var(--text3);cursor:not-allowed;}
+
+/* password strength bar */
+.pwd-strength{margin-top:.375rem;}
+.pwd-bar{height:3px;border-radius:2px;background:var(--border);overflow:hidden;}
+.pwd-fill{height:100%;border-radius:2px;transition:width .3s,background .3s;}
+.pwd-txt{font-size:.65rem;font-weight:700;margin-top:3px;}
+
+/* locked account badge */
+.locked-badge{
+  background:rgba(22,163,74,.06);border:1px solid rgba(22,163,74,.18);
+  border-radius:10px;padding:.625rem .875rem;
+  display:flex;align-items:center;gap:.5rem;margin-bottom:.875rem;
+  font-size:.76rem;color:var(--green);font-weight:700;
+}
+.locked-phone{font-family:var(--mono);font-size:.7rem;margin-left:auto;color:var(--text2);}
+
+/* sms bubble */
+.sms-bubble{
+  background:linear-gradient(135deg,#1e3a8a,var(--blue));
+  border-radius:14px;padding:1rem 1.125rem;margin-bottom:1rem;
+  position:relative;
+}
+.sms-bubble::after{content:'▼';position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);color:var(--blue);font-size:.7rem;}
+.sms-from{font-size:.65rem;color:rgba(255,255,255,.6);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.375rem;}
+.sms-body{font-size:.82rem;color:rgba(255,255,255,.9);line-height:1.55;}
+.sms-otp{font-family:var(--mono);font-size:1.6rem;font-weight:900;color:white;letter-spacing:.2em;display:block;margin:.5rem 0 .25rem;}
+.sms-exp{font-size:.65rem;color:rgba(255,255,255,.55);}
+
+/* sending animation */
+.sending-dots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--blue);margin:0 2px;animation:bounce 1.2s infinite;}
+.sending-dots span:nth-child(2){animation-delay:.2s;}
+.sending-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-8px)}}
+
+@media(max-width:700px){.login-wrap{grid-template-columns:1fr;}.login-left{display:none;}}
+@media(max-width:1100px){.login-wrap{max-width:700px;}}
+
+/* ─────────────────────── APP SHELL ─────────────────────── */
+.app{display:none;min-height:100vh;background:var(--bg);}
+.app.on{display:flex;}
+
+/* ─────────────────────── SIDEBAR ─────────────────────── */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  background:var(--panel);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;bottom:0;z-index:50;
+}
+.sb-top{padding:1.25rem 1.25rem 1rem;border-bottom:1px solid var(--border);}
+.sb-logo{display:flex;align-items:center;gap:.625rem;}
+.sb-mark{
+  width:34px;height:34px;border-radius:9px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;font-weight:900;color:white;
+}
+.sb-mark.customer{background:linear-gradient(135deg,var(--blue),var(--blue2));}
+.sb-mark.admin{background:linear-gradient(135deg,var(--orange),#f97316);}
+.sb-mark.worker{background:linear-gradient(135deg,var(--teal),#2dd4bf);}
+.sb-title{font-family:var(--serif);font-size:.9rem;font-weight:900;letter-spacing:-.2px;color:var(--text);line-height:1.2;}
+.sb-title em{font-style:italic;color:var(--blue2);}
+.sb-title.admin em{color:var(--orange);}
+.sb-portal{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);}
+.sb-user{
+  margin:.875rem 1.125rem;padding:.6rem .75rem;
+  background:var(--bg3);border:1px solid var(--border);border-radius:10px;
+  display:flex;align-items:center;gap:.625rem;
+}
+.u-av{
+  width:30px;height:30px;border-radius:8px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:800;color:white;
+}
+.u-av.c{background:linear-gradient(135deg,var(--blue),var(--blue2));}
+.u-av.w{background:linear-gradient(135deg,var(--teal),#2dd4bf);}
+.u-av.a{background:linear-gradient(135deg,var(--orange),#f97316);}
+.u-nm{font-size:.78rem;font-weight:700;flex:1;}
+.u-rl{font-size:.62rem;color:var(--text3);}
+.ondot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;flex-shrink:0;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+.nav-sec{padding:.875rem 1.125rem .25rem;font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text4);}
+.nav-item{
+  display:flex;align-items:center;gap:.55rem;
+  padding:.55rem .875rem;margin:1px .625rem;
+  border-radius:9px;cursor:pointer;
+  font-size:.8rem;font-weight:600;color:var(--text2);
+  transition:all .15s;
+}
+.nav-item:hover{background:var(--bg3);color:var(--text);}
+.nav-item.on{background:var(--blueg);color:var(--blue);border:1px solid rgba(37,99,235,.12);}
+.nav-item.on.admin-on{background:var(--orangeg);color:var(--orange);border-color:rgba(234,88,12,.12);}
+.ni-ico{width:17px;text-align:center;font-size:.88rem;}
+.ni-badge{margin-left:auto;font-size:.58rem;font-weight:800;padding:1px 6px;border-radius:50px;font-family:var(--mono);}
+.nb-blue{background:var(--blue);color:white;}
+.nb-green{background:var(--green);color:white;}
+.nb-orange{background:var(--orange);color:white;}
+.nb-red{background:var(--red);color:white;animation:pulse 1.5s infinite;}
+.sb-bottom{margin-top:auto;padding:.875rem;border-top:1px solid var(--border);}
+.logout{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.5rem;border-radius:8px;border:1px solid var(--border);
+  background:transparent;font-size:.76rem;font-weight:700;color:var(--text2);
+  cursor:pointer;transition:all .15s;
+}
+.logout:hover{background:rgba(220,38,38,.05);border-color:rgba(220,38,38,.2);color:var(--red);}
+
+/* ─────────────────────── TOPBAR ─────────────────────── */
+.topbar{
+  position:sticky;top:0;z-index:40;height:56px;
+  background:rgba(247,248,252,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.875rem;padding:0 1.75rem;
+}
+.tb-crumb{font-size:.78rem;color:var(--text3);display:flex;align-items:center;gap:.5rem;}
+.tb-crumb .sep{color:var(--border2);}
+.tb-crumb .cur{color:var(--text);font-size:.9rem;font-weight:800;}
+.tb-search{
+  margin-left:auto;display:flex;align-items:center;gap:.375rem;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:9px;padding:0 .825rem;height:32px;width:220px;
+  box-shadow:var(--shadow);
+}
+.tb-search input{background:none;border:none;outline:none;font-family:var(--font);font-size:.78rem;color:var(--text);width:100%;}
+.tb-search input::placeholder{color:var(--text3);}
+.tb-actions{display:flex;gap:.5rem;align-items:center;}
+.tb-clock{
+  background:var(--panel);border:1px solid var(--border);border-radius:8px;
+  padding:0 .75rem;height:32px;display:flex;align-items:center;
+  font-family:var(--mono);font-size:.72rem;color:var(--teal);
+  box-shadow:var(--shadow);
+}
+.ib{
+  width:32px;height:32px;border-radius:8px;
+  background:var(--panel);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:.9rem;transition:all .15s;
+  box-shadow:var(--shadow);position:relative;
+}
+.ib:hover{border-color:var(--border2);background:var(--bg3);}
+.ib .ndot{position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--red);border:1.5px solid var(--bg);}
+
+/* ─────────────────────── BUTTON ─────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:.35rem;padding:0 .875rem;height:32px;border-radius:8px;border:none;cursor:pointer;font-family:var(--font);font-size:.78rem;font-weight:700;transition:all .15s;white-space:nowrap;box-shadow:var(--shadow);}
+.btn-blue{background:var(--blue);color:white;}
+.btn-blue:hover{background:var(--blue2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(37,99,235,.3);}
+.btn-orange{background:var(--orange);color:white;}
+.btn-orange:hover{background:#c2410c;transform:translateY(-1px);box-shadow:0 4px 12px rgba(234,88,12,.3);}
+.btn-outline{background:var(--panel);color:var(--text);border:1px solid var(--border);}
+.btn-outline:hover{border-color:var(--border2);background:var(--bg3);}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid transparent;box-shadow:none;}
+.btn-ghost:hover{background:var(--bg3);color:var(--text);}
+.btn-green{background:var(--green);color:white;}
+.btn-green:hover{background:#15803d;transform:translateY(-1px);}
+.btn-red{background:rgba(220,38,38,.08);color:var(--red);border:1px solid rgba(220,38,38,.15);box-shadow:none;}
+.btn-red:hover{background:rgba(220,38,38,.14);}
+.btn-blue-soft{background:rgba(37,99,235,.08);color:var(--blue);border:1px solid rgba(37,99,235,.15);box-shadow:none;}
+.btn-blue-soft:hover{background:rgba(37,99,235,.14);}
+.btn-teal-soft{background:rgba(13,148,136,.08);color:var(--teal);border:1px solid rgba(13,148,136,.15);box-shadow:none;}
+.btn-teal-soft:hover{background:rgba(13,148,136,.14);}
+.btn-sm{padding:0 .55rem;height:26px;font-size:.7rem;border-radius:7px;}
+.btn-lg{padding:0 1.5rem;height:40px;font-size:.875rem;border-radius:10px;}
+
+/* ─────────────────────── MAIN + VIEWS ─────────────────────── */
+.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.content{padding:1.5rem 1.75rem;flex:1;}
+.view{display:none;}
+.view.on{display:block;animation:vfade .22s ease;}
+@keyframes vfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ─────────────────────── CARDS ─────────────────────── */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;margin-bottom:1.25rem;}
+.card-head{display:flex;align-items:center;justify-content:space-between;padding:.875rem 1.25rem;border-bottom:1px solid var(--border);}
+.card-head h2{font-size:.875rem;font-weight:800;color:var(--text);}
+.card-head p{font-size:.7rem;color:var(--text3);margin-top:1px;}
+.card-head-actions{display:flex;gap:.4rem;align-items:center;}
+.pad{padding:1.25rem;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:1.25rem;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1.125rem;margin-bottom:1.25rem;}
+
+/* ─────────────────────── KPI ─────────────────────── */
+.kpi{
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--r);
+  padding:1.25rem;box-shadow:var(--shadow);cursor:pointer;
+  transition:all .2s;position:relative;overflow:hidden;
+}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow2);}
+.kpi::after{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;opacity:.05;}
+.kpi.blue::after{background:var(--blue);}
+.kpi.green::after{background:var(--green);}
+.kpi.orange::after{background:var(--orange);}
+.kpi.purple::after{background:var(--purple);}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
+.kpi-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);}
+.kpi-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.kpi-icon.blue{background:var(--blueg);color:var(--blue);}
+.kpi-icon.green{background:var(--greeng);color:var(--green);}
+.kpi-icon.orange{background:var(--orangeg);color:var(--orange);}
+.kpi-icon.purple{background:rgba(124,58,237,.08);color:var(--purple);}
+.kpi-val{font-family:var(--serif);font-size:2rem;font-weight:900;line-height:1;margin-bottom:.375rem;letter-spacing:-.5px;}
+.kpi.blue .kpi-val{color:var(--blue);}
+.kpi.green .kpi-val{color:var(--green);}
+.kpi.orange .kpi-val{color:var(--orange);}
+.kpi.purple .kpi-val{color:var(--purple);}
+.kpi-sub{display:flex;align-items:center;gap:.5rem;font-size:.7rem;color:var(--text3);}
+.trend{font-size:.67rem;font-weight:700;padding:1px 6px;border-radius:50px;}
+.up{background:rgba(22,163,74,.08);color:var(--green);}
+.dn{background:rgba(220,38,38,.08);color:var(--red);}
+
+/* ─────────────────────── BADGES ─────────────────────── */
+.bx{display:inline-flex;align-items:center;gap:3px;font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:50px;border:1px solid transparent;white-space:nowrap;}
+.bx .d{width:5px;height:5px;border-radius:50%;}
+.bx-g{background:rgba(22,163,74,.07);color:var(--green);border-color:rgba(22,163,74,.18);}
+.bx-g .d{background:var(--green);animation:pulse 2s infinite;}
+.bx-y{background:rgba(217,119,6,.07);color:var(--yellow);border-color:rgba(217,119,6,.18);}
+.bx-y .d{background:var(--yellow);animation:pulse 1.5s infinite;}
+.bx-r{background:rgba(220,38,38,.07);color:var(--red);border-color:rgba(220,38,38,.18);}
+.bx-r .d{background:var(--red);}
+.bx-b{background:var(--blueg);color:var(--blue);border-color:rgba(37,99,235,.18);}
+.bx-b .d{background:var(--blue);}
+.bx-t{background:rgba(13,148,136,.07);color:var(--teal);border-color:rgba(13,148,136,.18);}
+.bx-gr{background:rgba(148,163,184,.08);color:var(--text3);border-color:var(--border);}
+.bx-p{background:rgba(124,58,237,.07);color:var(--purple);border-color:rgba(124,58,237,.18);}
+.bx-or{background:var(--orangeg);color:var(--orange);border-color:rgba(234,88,12,.18);}
+
+/* ─────────────────────── TABLE ─────────────────────── */
+table{width:100%;border-collapse:collapse;}
+thead{background:var(--bg3);}
+th{padding:.6rem 1rem;text-align:left;font-size:.62rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--bg3);}
+td{padding:.75rem 1rem;font-size:.8rem;vertical-align:middle;}
+.td-fw{font-weight:700;}
+.td-sm{font-size:.68rem;color:var(--text3);margin-top:1px;}
+.td-mn{font-family:var(--mono);font-size:.7rem;color:var(--text3);}
+.td-acts{display:flex;gap:.3rem;align-items:center;}
+.stars{color:var(--yellow);font-size:.65rem;}
+
+/* ─────────────────────── FILTERS ─────────────────────── */
+.filters{display:flex;align-items:center;gap:.375rem;padding:.75rem 1.25rem;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.chip{padding:.28rem .8rem;border-radius:7px;font-size:.7rem;font-weight:700;cursor:pointer;background:var(--bg3);border:1px solid var(--border);color:var(--text2);transition:all .15s;}
+.chip:hover{color:var(--text);}
+.chip.on{background:var(--blueg);color:var(--blue);border-color:rgba(37,99,235,.2);}
+.chip.on.or{background:var(--orangeg);color:var(--orange);border-color:rgba(234,88,12,.2);}
+.f-right{margin-left:auto;display:flex;gap:.375rem;}
+.f-input{background:var(--panel);border:1px solid var(--border);border-radius:7px;padding:.28rem .7rem;font-family:var(--font);font-size:.7rem;color:var(--text);outline:none;width:160px;transition:border-color .15s;box-shadow:var(--shadow);}
+.f-input:focus{border-color:var(--blue2);}
+.f-select{background:var(--panel);border:1px solid var(--border);border-radius:7px;padding:.28rem .6rem;font-family:var(--font);font-size:.7rem;color:var(--text2);outline:none;cursor:pointer;box-shadow:var(--shadow);}
+.f-select option{background:var(--panel);}
+
+/* ─────────────────────── PAGER ─────────────────────── */
+.pager{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.25rem;border-top:1px solid var(--border);}
+.pg-info{font-size:.7rem;color:var(--text3);}
+.pg-btns{display:flex;gap:3px;}
+.pg-btn{width:26px;height:26px;border-radius:6px;background:var(--panel);border:1px solid var(--border);font-size:.7rem;font-family:var(--font);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;box-shadow:var(--shadow);}
+.pg-btn:hover{border-color:var(--blue2);color:var(--blue);}
+.pg-btn.on{background:var(--blue);border-color:var(--blue);color:white;}
+
+/* ─────────────────────── LIVE PILL ─────────────────────── */
+.live-pill{display:flex;align-items:center;gap:.35rem;background:rgba(22,163,74,.07);color:var(--green);font-size:.67rem;font-weight:800;padding:3px 10px;border-radius:50px;border:1px solid rgba(22,163,74,.18);}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1.2s infinite;}
+
+/* ─────────────────────── HERO ─────────────────────── */
+.hero{
+  background:linear-gradient(135deg,var(--blue) 0%,#1d4ed8 40%,var(--purple) 100%);
+  border-radius:var(--r);padding:2.5rem 2.25rem;margin-bottom:1.25rem;
+  position:relative;overflow:hidden;color:white;
+}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.05);}
+.hero::after{content:'';position:absolute;bottom:-60px;left:200px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.04);}
+.hero h1{font-family:var(--serif);font-size:clamp(1.75rem,3vw,2.75rem);font-weight:900;line-height:1.05;letter-spacing:-1px;margin-bottom:.625rem;position:relative;z-index:1;}
+.hero h1 em{font-style:italic;color:rgba(255,255,255,.75);}
+.hero p{font-size:.875rem;color:rgba(255,255,255,.8);line-height:1.65;max-width:460px;margin-bottom:1.25rem;position:relative;z-index:1;}
+.hero-btns{display:flex;gap:.625rem;flex-wrap:wrap;position:relative;z-index:1;}
+.hero-btn-w{background:white;color:var(--blue);padding:0 1.25rem;height:38px;border-radius:9px;font-weight:800;font-size:.82rem;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:.375rem;}
+.hero-btn-w:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.2);}
+.hero-btn-o{background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.25);padding:0 1.25rem;height:38px;border-radius:9px;font-weight:700;font-size:.82rem;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:.375rem;}
+.hero-btn-o:hover{background:rgba(255,255,255,.2);}
+.hero-stats{display:flex;gap:2rem;flex-wrap:wrap;position:relative;z-index:1;margin-top:1.75rem;}
+.hstat{border-left:2px solid rgba(255,255,255,.2);padding-left:.875rem;}
+.hstat .n{font-family:var(--serif);font-size:1.5rem;font-weight:900;color:white;line-height:1;}
+.hstat .l{font-size:.62rem;color:rgba(255,255,255,.65);font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+
+/* ─────────────────────── SERVICE GRID ─────────────────────── */
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.875rem;}
+.svc-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--r2);
+  padding:1.25rem 1rem;text-align:center;cursor:pointer;
+  transition:all .22s;box-shadow:var(--shadow);position:relative;overflow:hidden;
+}
+.svc-card::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,var(--blueg) 0%,transparent 100%);opacity:0;transition:opacity .22s;}
+.svc-card:hover{transform:translateY(-3px);box-shadow:var(--shadow2);border-color:rgba(37,99,235,.2);}
+.svc-card:hover::before{opacity:1;}
+.svc-card.selected{border-color:var(--blue2);background:var(--blueg);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+.svc-ico{font-size:2rem;display:block;margin-bottom:.5rem;}
+.svc-nm{font-size:.78rem;font-weight:800;color:var(--text);}
+.svc-cnt{font-size:.63rem;color:var(--text3);margin-top:2px;}
+
+/* ─────────────────────── STEPS ─────────────────────── */
+.steps{display:flex;align-items:center;margin-bottom:1.75rem;}
+.step{flex:1;text-align:center;position:relative;}
+.step::before{content:'';position:absolute;top:14px;left:50%;right:-50%;height:2px;background:var(--border2);z-index:0;}
+.step:last-child::before{display:none;}
+.step.done::before{background:var(--green);}
+.sc{width:28px;height:28px;border-radius:50%;margin:0 auto .375rem;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;position:relative;z-index:1;border:2px solid var(--border2);background:var(--bg3);color:var(--text3);}
+.sc.done{background:var(--green);border-color:var(--green);color:white;}
+.sc.act{background:var(--blue);border-color:var(--blue);color:white;animation:pulse 2s infinite;}
+.sl{font-size:.62rem;color:var(--text3);}
+.step.act .sl{color:var(--blue);font-weight:700;}
+.step.done .sl{color:var(--green);font-weight:700;}
+
+/* ─────────────────────── FORM ─────────────────────── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.875rem;}
+.form-grid .full{grid-column:1/-1;}
+.fgroup{display:flex;flex-direction:column;gap:.35rem;}
+.fgroup label{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);}
+input,select,textarea{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:.6rem .875rem;font-family:var(--font);font-size:.82rem;color:var(--text);outline:none;transition:all .18s;width:100%;}
+input:focus,select:focus,textarea:focus{border-color:var(--blue2);box-shadow:0 0 0 3px rgba(37,99,235,.08);background:var(--panel);}
+select option{background:var(--panel);}
+textarea{resize:vertical;min-height:76px;}
+
+/* ─────────────────────── WORKER CARDS ─────────────────────── */
+.wk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1rem;}
+.wk-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;transition:all .22s;box-shadow:var(--shadow);}
+.wk-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:var(--shadow2);}
+.wk-top{display:flex;align-items:center;gap:.75rem;margin-bottom:.875rem;}
+.wk-av{width:44px;height:44px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.15rem;font-weight:800;font-family:var(--mono);}
+.wk-name{font-weight:800;font-size:.92rem;}
+.wk-trade{font-size:.72rem;color:var(--text2);}
+.wk-meta{display:flex;gap:.625rem;flex-wrap:wrap;margin-bottom:.75rem;}
+.wk-meta span{font-size:.7rem;color:var(--text2);}
+.wk-acts{display:flex;gap:.35rem;padding-top:.875rem;border-top:1px solid var(--border);}
+
+/* ─────────────────────── VACANCY CARDS ─────────────────────── */
+.vac-list{display:flex;flex-direction:column;gap:.875rem;}
+.vac{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:1.125rem;display:flex;align-items:flex-start;gap:.875rem;cursor:pointer;transition:all .2s;box-shadow:var(--shadow);}
+.vac:hover{border-color:var(--border2);transform:translateX(3px);box-shadow:var(--shadow2);}
+.vac-ico{width:44px;height:44px;border-radius:11px;flex-shrink:0;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
+.vac-body{flex:1;}
+.vac-body h3{font-weight:800;font-size:.9rem;margin-bottom:.2rem;}
+.vac-body p{font-size:.76rem;color:var(--text2);line-height:1.5;margin-bottom:.55rem;}
+.vac-tags{display:flex;gap:.35rem;flex-wrap:wrap;}
+
+/* ─────────────────────── 
+   LIVE MAP — GPS SIMULATION
+────────────────────────── */
+.map-container{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;
+  margin-bottom:1.25rem;
+}
+.map-header{display:flex;align-items:center;justify-content:space-between;padding:.875rem 1.25rem;border-bottom:1px solid var(--border);}
+.map-canvas{
+  position:relative;height:380px;overflow:hidden;
+  background:
+    linear-gradient(rgba(226,232,240,.4) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(226,232,240,.4) 1px,transparent 1px),
+    radial-gradient(ellipse 80% 60% at 50% 50%,rgba(37,99,235,.02) 0%,transparent 70%),
+    linear-gradient(180deg,#f8faff 0%,#f0f6ff 100%);
+  background-size:48px 48px,48px 48px,100% 100%,100% 100%;
+}
+/* Roads */
+.road{position:absolute;background:#e2e8f0;}
+.road.h{left:0;right:0;height:3px;}
+.road.v{top:0;bottom:0;width:3px;}
+.road.major{background:#cbd5e1;box-shadow:0 0 0 1px rgba(148,163,184,.2);}
+/* Road labels */
+.road-label{position:absolute;font-size:.58rem;font-weight:700;color:var(--text3);background:rgba(255,255,255,.85);padding:1px 5px;border-radius:4px;pointer-events:none;border:1px solid var(--border);}
+/* Map pin */
+.map-pin{position:absolute;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;cursor:pointer;z-index:10;transition:left .6s cubic-bezier(.34,1.56,.64,1),top .6s cubic-bezier(.34,1.56,.64,1);}
+.map-pin:hover .pin-label{opacity:1;transform:translateY(0);}
+.pin-body{
+  width:38px;height:38px;border-radius:50% 50% 50% 0;
+  transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 18px rgba(0,0,0,.18);border:2.5px solid white;
+}
+.pin-body span{transform:rotate(45deg);font-size:1rem;display:block;}
+.pin-you .pin-body{background:var(--blue);}
+.pin-available .pin-body{background:var(--green);}
+.pin-enroute .pin-body{background:var(--orange);}
+.pin-busy .pin-body{background:var(--yellow);}
+.pin-offline .pin-body{background:var(--text3);}
+.pin-label{
+  background:white;border:1px solid var(--border2);border-radius:8px;
+  padding:2px 8px;font-size:.62rem;font-weight:700;white-space:nowrap;
+  box-shadow:var(--shadow2);margin-top:4px;
+  transition:all .2s;opacity:.9;
+}
+/* Ping ring around YOUR location */
+.ping-ring{
+  position:absolute;width:44px;height:44px;border-radius:50%;
+  border:2px solid var(--blue);top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  animation:pingOut 2.4s ease-in-out infinite;pointer-events:none;
+}
+@keyframes pingOut{0%{width:32px;height:32px;opacity:.9}100%{width:80px;height:80px;opacity:0}}
+/* Route path */
+.route-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;}
+/* Animated car dot on route */
+.car-dot{
+  width:12px;height:12px;border-radius:50%;background:var(--orange);
+  border:2px solid white;box-shadow:0 2px 8px rgba(234,88,12,.4);
+  position:absolute;transform:translate(-50%,-50%);
+  transition:left .6s ease,top .6s ease;z-index:20;
+}
+.eta-card{
+  position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);
+  background:white;border:1px solid var(--border);border-radius:12px;
+  padding:.625rem 1.125rem;box-shadow:var(--shadow2);
+  display:flex;align-items:center;gap:.75rem;font-size:.78rem;z-index:30;
+  white-space:nowrap;
+}
+.eta-card .eta-val{font-family:var(--serif);font-size:1.4rem;font-weight:900;color:var(--orange);line-height:1;}
+.eta-card .eta-lbl{font-size:.62rem;color:var(--text3);font-weight:600;}
+.eta-card .eta-dist{color:var(--text2);font-size:.75rem;font-weight:600;}
+.map-footer{display:flex;align-items:center;gap:1rem;padding:.625rem 1.25rem;border-top:1px solid var(--border);flex-wrap:wrap;}
+.mf-item{display:flex;align-items:center;gap:.35rem;font-size:.68rem;color:var(--text2);}
+.mf-dot{width:9px;height:9px;border-radius:50%;}
+/* GPS bar */
+.gps-bar{
+  position:absolute;top:1rem;right:1rem;z-index:30;
+  background:white;border:1px solid var(--border);border-radius:10px;
+  padding:.5rem .75rem;box-shadow:var(--shadow2);
+  display:flex;flex-direction:column;gap:.25rem;min-width:160px;
+}
+.gps-row{display:flex;justify-content:space-between;align-items:center;font-size:.68rem;}
+.gps-label{color:var(--text3);font-weight:600;}
+.gps-val{font-family:var(--mono);font-size:.65rem;color:var(--blue);font-weight:700;}
+.gps-val.live{color:var(--orange);animation:pulse .8s infinite;}
+
+/* ─────────────────────── CHARTS ─────────────────────── */
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:110px;padding-bottom:4px;}
+.bc-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.bc-bar{width:100%;border-radius:5px 5px 0 0;background:var(--blue);opacity:.8;cursor:pointer;transition:all .2s;position:relative;}
+.bc-bar:hover{opacity:1;transform:scaleY(1.03);transform-origin:bottom;}
+.bc-bar.or{background:var(--orange);}
+.bc-v{font-size:.62rem;font-weight:700;color:var(--blue);}
+.bc-v.or{color:var(--orange);}
+.legend-row{display:flex;gap:.4rem;flex-wrap:wrap;}
+.leg{display:flex;align-items:center;gap:.35rem;font-size:.72rem;color:var(--text2);}
+.leg-dot{width:8px;height:8px;border-radius:2px;}
+.prog-row{display:flex;align-items:center;gap:.625rem;margin-bottom:.625rem;}
+.prog-row:last-child{margin-bottom:0;}
+.prog-label{font-size:.73rem;color:var(--text2);width:92px;flex-shrink:0;}
+.prog-bg{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:3px;}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--border);}
+.stat-row:last-child{border-bottom:none;}
+.stat-k{font-size:.78rem;color:var(--text2);}
+.stat-v{font-size:.8rem;font-weight:700;}
+
+/* ─────────────────────── FEED ─────────────────────── */
+.feed-item{display:flex;gap:.75rem;padding:.75rem 1.25rem;border-bottom:1px solid var(--border);transition:background .12s;cursor:pointer;}
+.feed-item:last-child{border-bottom:none;}
+.feed-item:hover{background:var(--bg3);}
+.feed-ico{width:32px;height:32px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.9rem;}
+.feed-body{flex:1;}
+.feed-body h4{font-size:.8rem;font-weight:700;margin-bottom:1px;}
+.feed-body p{font-size:.7rem;color:var(--text3);}
+.feed-time{font-size:.64rem;color:var(--text3);font-family:var(--mono);margin-top:1px;}
+
+/* ─────────────────────── TOGGLE ─────────────────────── */
+.tog{width:36px;height:20px;border-radius:50px;background:var(--border2);cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;}
+.tog.on{background:var(--green);}
+.tog-th{position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:white;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.tog.on .tog-th{transform:translateX(16px);}
+.tog-row{display:flex;align-items:center;justify-content:space-between;padding:.825rem 0;border-bottom:1px solid var(--border);}
+.tog-row:last-child{border-bottom:none;}
+.tog-label h4{font-size:.82rem;font-weight:700;}
+.tog-label p{font-size:.7rem;color:var(--text3);}
+
+/* ─────────────────────── MODAL ─────────────────────── */
+.overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(15,23,42,.45);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:1rem;}
+.overlay.open{display:flex;}
+.modal{background:var(--panel);border:1px solid var(--border);border-radius:20px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow3);animation:mPop .3s cubic-bezier(.34,1.56,.64,1);}
+@keyframes mPop{from{opacity:0;transform:scale(.9) translateY(16px)}to{opacity:1;transform:none}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:1.125rem 1.25rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--panel);z-index:1;}
+.modal-head h2{font-size:.92rem;font-weight:800;}
+.modal-head p{font-size:.7rem;color:var(--text3);}
+.modal-body{padding:1.25rem;}
+.modal-foot{display:flex;gap:.55rem;justify-content:flex-end;padding:.875rem 1.25rem;border-top:1px solid var(--border);}
+.x-btn{width:26px;height:26px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.x-btn:hover{color:var(--red);border-color:rgba(220,38,38,.25);}
+.dp-grid{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-bottom:.875rem;}
+.dp{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:.75rem;}
+.dp.full{grid-column:1/-1;}
+.dk{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:3px;}
+.dv{font-size:.82rem;font-weight:700;}
+
+/* ─────────────────────── TOAST ─────────────────────── */
+.toast{
+  position:fixed;bottom:1.25rem;right:1.25rem;z-index:500;
+  background:var(--panel);border:1px solid var(--border);border-radius:14px;
+  padding:.875rem 1.125rem;display:flex;align-items:center;gap:.625rem;
+  box-shadow:var(--shadow3);
+  transform:translateY(80px);opacity:0;
+  transition:all .35s cubic-bezier(.34,1.56,.64,1);
+  max-width:320px;pointer-events:none;
+}
+.toast.show{transform:none;opacity:1;pointer-events:auto;}
+.toast-bar{width:3px;height:34px;border-radius:2px;flex-shrink:0;}
+.toast-text h4{font-size:.82rem;font-weight:800;}
+.toast-text p{font-size:.72rem;color:var(--text3);}
+
+/* ─────────────────────── WORKER PORTAL SPECIFIC ─────────────────────── */
+.job-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:1.125rem;box-shadow:var(--shadow);margin-bottom:.875rem;display:flex;align-items:flex-start;gap:.875rem;}
+.job-card:hover{border-color:var(--border2);box-shadow:var(--shadow2);}
+.job-priority{width:40px;height:40px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+.job-info{flex:1;}
+.job-info h3{font-weight:800;font-size:.9rem;margin-bottom:.2rem;}
+.job-info p{font-size:.76rem;color:var(--text2);line-height:1.45;}
+.job-meta{display:flex;gap:.625rem;margin-top:.5rem;flex-wrap:wrap;}
+
+@media(max-width:1100px){.g4{grid-template-columns:repeat(2,1fr);}  .g3{grid-template-columns:1fr 1fr;}}
+@media(max-width:768px){.main{margin-left:0;}.sidebar{transform:translateX(-100%);}  .g2,.g3,.g4,.form-grid{grid-template-columns:1fr;}.login-wrap{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════
+     LOGIN SCREEN
+════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-wrap">
+
+    <!-- LEFT PANEL -->
+    <div class="login-left">
+      <div class="ll-brand">
+        <div class="ll-logo">Home Service<br><em>Booking Platform</em></div>
+        <div class="ll-tagline">India's most reliable home service booking platform. Book, track, and manage with ease.</div>
+      </div>
+      <div class="ll-features">
+        <div class="ll-feat">
+          <div class="ll-feat-ic">📍</div>
+          <div class="ll-feat-text">
+            <h4>Live GPS Tracking</h4>
+            <p>Watch your worker move toward you in real-time on an interactive map</p>
+          </div>
+        </div>
+        <div class="ll-feat">
+          <div class="ll-feat-ic">⚡</div>
+          <div class="ll-feat-text">
+            <h4>Instant Booking</h4>
+            <p>Plumbers, electricians, house help & 10 more — available in under 2 hrs</p>
+          </div>
+        </div>
+        <div class="ll-feat">
+          <div class="ll-feat-ic">🔐</div>
+          <div class="ll-feat-text">
+            <h4>Separate Admin Portal</h4>
+            <p>Full dashboard to manage bookings, workers & analytics — admin only</p>
+          </div>
+        </div>
+      </div>
+      <div class="ll-stats">
+        <div class="ll-stat"><div class="n">200+</div><div class="l">Workers</div></div>
+        <div class="ll-stat"><div class="n">12</div><div class="l">Services</div></div>
+        <div class="ll-stat"><div class="n">3.4k</div><div class="l">Jobs Done</div></div>
+        <div class="ll-stat"><div class="n">4.8★</div><div class="l">Rating</div></div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="login-right">
+      <div class="lr-title" id="lr-title">Welcome 👋</div>
+      <div class="lr-sub" id="lr-sub">Enter your phone number to get started</div>
+
+      <!-- ROLE TABS -->
+      <div class="tab-row" id="role-tabs">
+        <div class="tab on" id="tab-c" onclick="lTab('c')">🏠 Customer</div>
+        <div class="tab" id="tab-w" onclick="lTab('w')">👷 Worker</div>
+        <div class="tab" id="tab-a" onclick="lTab('a')">🔐 Admin</div>
+      </div>
+
+      <!-- ERROR / SUCCESS MESSAGES -->
+      <div class="lerr" id="l-err">⚠️ <span id="l-err-msg">Invalid credentials.</span></div>
+      <div class="lsuc" id="l-suc">✅ <span id="l-suc-msg">OTP sent successfully.</span></div>
+
+      <!-- ══════════ CUSTOMER / WORKER FLOWS ══════════ -->
+      <div id="flow-cw">
+
+        <!-- STEP INDICATOR -->
+        <div class="step-indicator" id="step-indicator">
+          <div class="si">
+            <div class="si-num active" id="si1">1</div>
+            <span class="si-label active" id="sl1">Phone</span>
+          </div>
+          <div class="si-sep" id="sep12"></div>
+          <div class="si">
+            <div class="si-num idle" id="si2">2</div>
+            <span class="si-label" id="sl2">OTP</span>
+          </div>
+          <div class="si-sep" id="sep23"></div>
+          <div class="si">
+            <div class="si-num idle" id="si3">3</div>
+            <span class="si-label" id="sl3">Password</span>
+          </div>
+          <div class="si-sep" id="sep34"></div>
+          <div class="si">
+            <div class="si-num idle" id="si4">✓</div>
+            <span class="si-label" id="sl4">Done</span>
+          </div>
+        </div>
+
+        <!-- STEP 1: PHONE -->
+        <div id="step-phone">
+          <div class="fg">
+            <label>Mobile Number</label>
+            <div class="fi-w">
+              <span class="ic">📱</span>
+              <input class="fi" id="ph-input" type="tel" maxlength="15"
+                placeholder="+91 98765 43210"
+                oninput="onPhoneInput(this)"
+                onkeydown="if(event.key==='Enter')sendOTP()"/>
+            </div>
+          </div>
+          <p style="font-size:.7rem;color:var(--text3);margin-bottom:.875rem;line-height:1.55;">
+            We'll send a <strong>6-digit OTP</strong> to verify your number. Your phone and password will be locked to this account once set.
+          </p>
+          <button class="lbtn lbtn-c" id="send-otp-btn" onclick="sendOTP()" disabled>
+            Send OTP →
+          </button>
+          <div class="demo-hint">Already registered? <a onclick="showSignIn()">Sign In instead</a></div>
+        </div>
+
+        <!-- STEP 2: OTP VERIFY -->
+        <div id="step-otp" style="display:none">
+          <div class="sms-bubble" id="sms-preview">
+            <div class="sms-from">📱 HSBP — Verification</div>
+            <div class="sms-body">Your OTP for Home Service Booking Platform is</div>
+            <span class="sms-otp" id="sms-otp-display">——————</span>
+            <div class="sms-exp">Valid for 5 minutes. Do not share with anyone.</div>
+          </div>
+
+          <div class="phone-display">
+            <span>OTP sent to <span class="num" id="ph-display">—</span></span>
+            <span class="change" onclick="goBackToPhone()">✏️ Change</span>
+          </div>
+
+          <div class="fg">
+            <label>Enter 6-Digit OTP</label>
+            <div class="otp-row" id="otp-row">
+              <input class="otp-box" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" id="o1" oninput="otpInput(this,1)" onkeydown="otpKey(event,1)"/>
+              <input class="otp-box" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" id="o2" oninput="otpInput(this,2)" onkeydown="otpKey(event,2)"/>
+              <input class="otp-box" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" id="o3" oninput="otpInput(this,3)" onkeydown="otpKey(event,3)"/>
+              <input class="otp-box" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" id="o4" oninput="otpInput(this,4)" onkeydown="otpKey(event,4)"/>
+              <input class="otp-box" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" id="o5" oninput="otpInput(this,5)" onkeydown="otpKey(event,5)"/>
+              <input class="otp-box" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" id="o6" oninput="otpInput(this,6)" onkeydown="otpKey(event,6)"/>
+            </div>
+          </div>
+
+          <div class="resend-row">
+            <span id="resend-timer">Resend OTP in <strong id="resend-sec">30</strong>s</span>
+            <span id="resend-btn" class="resend-link disabled" style="display:none" onclick="reSendOTP()">Resend OTP</span>
+          </div>
+
+          <button class="lbtn lbtn-c" id="verify-otp-btn" onclick="verifyOTP()" disabled>Verify OTP →</button>
+        </div>
+
+        <!-- STEP 3: SET PASSWORD -->
+        <div id="step-pwd" style="display:none">
+          <div class="phone-display">
+            <span>✅ Phone verified: <span class="num" id="ph-display2">—</span></span>
+            <span class="bx bx-g" style="margin-left:auto"><span class="d"></span>Verified</span>
+          </div>
+
+          <div class="fg">
+            <label>Set Your Password</label>
+            <div class="fi-w">
+              <span class="ic">🔑</span>
+              <input class="fi" id="pwd1" type="password" placeholder="Create a strong password" oninput="checkPwdStrength(this.value)" onkeydown="if(event.key==='Enter')setPassword()"/>
+              <span class="fi-eye" onclick="tpwd('pwd1',this)">👁</span>
+            </div>
+            <div class="pwd-strength">
+              <div class="pwd-bar"><div class="pwd-fill" id="pwd-fill" style="width:0%;background:var(--red)"></div></div>
+              <div class="pwd-txt" id="pwd-txt" style="color:var(--text3)">Enter a password</div>
+            </div>
+          </div>
+
+          <div class="fg">
+            <label>Confirm Password</label>
+            <div class="fi-w">
+              <span class="ic">🔒</span>
+              <input class="fi" id="pwd2" type="password" placeholder="Re-enter password" onkeydown="if(event.key==='Enter')setPassword()"/>
+              <span class="fi-eye" onclick="tpwd('pwd2',this)">👁</span>
+            </div>
+          </div>
+
+          <p style="font-size:.7rem;color:var(--text3);margin-bottom:.875rem;line-height:1.55;">
+            🔒 This password will be <strong>permanently linked</strong> to your phone number. Use it every time you sign in.
+          </p>
+          <button class="lbtn lbtn-c" id="set-pwd-btn" onclick="setPassword()">Lock Account & Continue →</button>
+        </div>
+
+        <!-- SIGN IN (returning user) -->
+        <div id="step-signin" style="display:none">
+          <div class="locked-badge">
+            🔐 Account locked to this phone
+            <span class="locked-phone" id="locked-phone-display">—</span>
+          </div>
+          <div class="fg">
+            <label>Mobile Number</label>
+            <div class="fi-w">
+              <span class="ic">📱</span>
+              <input class="fi" id="si-phone" type="tel" placeholder="+91 98765 43210"
+                onkeydown="if(event.key==='Enter')signIn()"/>
+            </div>
+          </div>
+          <div class="fg">
+            <label>Password</label>
+            <div class="fi-w">
+              <span class="ic">🔑</span>
+              <input class="fi" id="si-pwd" type="password" placeholder="Your password"
+                onkeydown="if(event.key==='Enter')signIn()"/>
+              <span class="fi-eye" onclick="tpwd('si-pwd',this)">👁</span>
+            </div>
+          </div>
+          <button class="lbtn lbtn-c" id="signin-btn" onclick="signIn()">Sign In →</button>
+          <div class="demo-hint">New user? <a onclick="showRegister()">Register with OTP</a> &nbsp;·&nbsp; <a onclick="forgotPwd()">Forgot password?</a></div>
+        </div>
+
+      </div><!-- /flow-cw -->
+
+      <!-- ══════════ ADMIN FORM ══════════ -->
+      <div id="form-a" style="display:none">
+        <div class="admin-lock">🔒 Administrator access only — credentials required</div>
+        <div class="fg"><label>Admin Username</label>
+          <div class="fi-w"><span class="ic">👤</span><input class="fi" id="a-u" placeholder="admin username"/></div></div>
+        <div class="fg"><label>Admin Password</label>
+          <div class="fi-w"><span class="ic">🔐</span><input class="fi" id="a-p" type="password" placeholder="admin password"/>
+          <span class="fi-eye" onclick="tpwd('a-p',this)">👁</span></div></div>
+        <button class="lbtn lbtn-a" onclick="loginA()">Access Admin Dashboard →</button>
+        <div class="demo-hint">Demo: <a onclick="fdem('a-u','a-p','admin','admin@123')">Fill admin demo</a></div>
+      </div>
+
+    </div><!-- /login-right -->
+  </div><!-- /login-wrap -->
+</div><!-- /login-screen -->
+
+<!-- ════════════════════════════
+     CUSTOMER APP
+════════════════════════════ -->
+<div id="app-customer" class="app">
+  <aside class="sidebar">
+    <div class="sb-top">
+      <div class="sb-logo">
+        <div class="sb-mark customer">H</div>
+        <div>
+          <div class="sb-title">Home Service<br><em>Booking Platform</em></div>
+          <div class="sb-portal">Customer Portal</div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-user">
+      <div class="u-av c" id="c-av">PR</div>
+      <div><div class="u-nm" id="c-nm">Priya Reddy</div><div class="u-rl">Customer</div></div>
+      <div class="ondot"></div>
+    </div>
+    <div class="nav-sec">Main</div>
+    <div class="nav-item on" onclick="cNav('home',this)"><span class="ni-ico">◉</span>Home</div>
+    <div class="nav-item" onclick="cNav('book',this)"><span class="ni-ico">📋</span>Book Service<span class="ni-badge nb-blue">New</span></div>
+    <div class="nav-item" onclick="cNav('track',this)"><span class="ni-ico">📍</span>Live Track<span class="ni-badge nb-green">Live</span></div>
+    <div class="nav-item" onclick="cNav('workers',this)"><span class="ni-ico">👷</span>Workers</div>
+    <div class="nav-sec">More</div>
+    <div class="nav-item" onclick="cNav('vacancies',this)"><span class="ni-ico">💼</span>Vacancies<span class="ni-badge nb-orange">200</span></div>
+    <div class="nav-item" onclick="cNav('mybookings',this)"><span class="ni-ico">≡</span>My Bookings</div>
+    <div class="nav-item" onclick="cNav('contact',this)"><span class="ni-ico">💬</span>Contact</div>
+    <div class="sb-bottom">
+      <button class="logout" onclick="doLogout()">⏻ &nbsp;Sign Out</button>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <div class="tb-crumb"><span>Home Service Booking</span><span class="sep">/</span><span class="cur" id="c-title">Home</span></div>
+      <div class="tb-search"><span style="color:var(--text3);font-size:12px">⌕</span><input placeholder="Search services, workers..."/></div>
+      <div class="tb-actions">
+        <div class="tb-clock" id="c-clk">--:--</div>
+        <div class="ib" onclick="toast('🔔','Notification','Your worker is on the way!')"><span>🔔</span><div class="ndot"></div></div>
+        <button class="btn btn-blue" onclick="cNav('book',null)">+ Book Now</button>
+      </div>
+    </header>
+    <div class="content">
+
+      <!-- HOME -->
+      <div id="cv-home" class="view on">
+        <div class="hero">
+          <div class="bx bx-b" style="background:rgba(255,255,255,.15);color:white;border-color:rgba(255,255,255,.25);margin-bottom:1rem">● 200+ Verified Professionals Near You</div>
+          <h1>Expert Home Services<br><em>At Your Doorstep</em></h1>
+          <p>Plumbers, electricians, housekeepers & more — available 24/7 with real-time GPS tracking and instant online booking.</p>
+          <div class="hero-btns">
+            <button class="hero-btn-w" onclick="cNav('book',null)">⚡ Book a Service</button>
+            <button class="hero-btn-o" onclick="cNav('track',null)">📍 Track My Worker</button>
+          </div>
+          <div class="hero-stats">
+            <div class="hstat"><div class="n">200+</div><div class="l">Verified Workers</div></div>
+            <div class="hstat"><div class="n">12</div><div class="l">Service Types</div></div>
+            <div class="hstat"><div class="n">4.8★</div><div class="l">Avg Rating</div></div>
+            <div class="hstat"><div class="n">3.4k</div><div class="l">Jobs Done</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h2>Our Services</h2><p>Choose from 12 professional categories</p></div></div>
+          <div class="pad">
+            <div class="svc-grid">
+              <div class="svc-card" onclick="cNav('book',null)"><span class="svc-ico">🔧</span><div class="svc-nm">Plumber</div><div class="svc-cnt">28 workers</div></div>
+              <div class="svc-card" onclick="cNav('book',null)"><span class="svc-ico">⚡</span><div class="svc-nm">Electrician</div><div class="svc-cnt">34 workers</div></div>
+              <div class="svc-card" onclick="cNav('book',null)"><span class="svc-ico">🏠</span><div class="svc-nm">Housekeeping</div><div class="svc-cnt">45 workers</div></div>
+              <div class="svc-card" onclick="cNav('book',null)"><span class="svc-ico">🎨</span><div class="svc-nm">Painter</div><div class="svc-cnt">18 workers</div></div>
+              <div class="svc-card" onclick="cNav('book',null)"><span class="svc-ico">🔩</span><div class="svc-nm">Carpenter</div><div class="svc-cnt">22 workers</div></div>
+              <div class="svc-card" onclick="cNav('book',null)"><span class="svc-ico">❄️</span><div class="svc-nm">AC Service</div><div class="svc-cnt">16 workers</div></div>
+              <div class="svc-card" onclick="cNav('book',null)"><span class="svc-ico">🌿</span><div class="svc-nm">Gardener</div><div class="svc-cnt">14 workers</div></div>
+              <div class="svc-card" onclick="cNav('book',null)"><span class="svc-ico">🔒</span><div class="svc-nm">Locksmith</div><div class="svc-cnt">7 workers</div></div>
+              <div class="svc-card" onclick="cNav('book',null)"><span class="svc-ico">🐜</span><div class="svc-nm">Pest Control</div><div class="svc-cnt">8 workers</div></div>
+              <div class="svc-card" onclick="cNav('book',null)"><span class="svc-ico">📦</span><div class="svc-nm">Movers</div><div class="svc-cnt">19 workers</div></div>
+              <div class="svc-card" onclick="cNav('book',null)"><span class="svc-ico">🛁</span><div class="svc-nm">Bathroom Fit</div><div class="svc-cnt">9 workers</div></div>
+              <div class="svc-card" onclick="cNav('book',null)"><span class="svc-ico">🪟</span><div class="svc-nm">Windows</div><div class="svc-cnt">11 workers</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="card-head"><div><h2>Recent Bookings</h2></div><button class="btn btn-ghost btn-sm" onclick="cNav('mybookings',null)">View all →</button></div>
+            <table><thead><tr><th>Service</th><th>Worker</th><th>Status</th></tr></thead><tbody>
+              <tr><td>⚡ Electrician</td><td>Ravi Kumar</td><td><span class="bx bx-g"><span class="d"></span>Done</span></td></tr>
+              <tr><td>🔧 Plumber</td><td>Suresh Babu</td><td><span class="bx bx-y"><span class="d"></span>En Route</span></td></tr>
+              <tr><td>❄️ AC Service</td><td>—</td><td><span class="bx bx-gr">Scheduled</span></td></tr>
+            </tbody></table>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h2>Quick Actions</h2></div></div>
+            <div class="pad" style="display:flex;flex-direction:column;gap:.5rem;">
+              <button class="btn btn-blue btn-lg" style="width:100%;justify-content:center;" onclick="cNav('book',null)">📋 Book a Service Now</button>
+              <button class="btn btn-blue-soft btn-lg" style="width:100%;justify-content:center;" onclick="cNav('track',null)">📍 Track Worker Live</button>
+              <button class="btn btn-outline btn-lg" style="width:100%;justify-content:center;" onclick="cNav('vacancies',null)">💼 View Job Vacancies</button>
+              <button class="btn btn-outline btn-lg" style="width:100%;justify-content:center;" onclick="cNav('workers',null)">👷 Browse Workers</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOOK SERVICE -->
+      <div id="cv-book" class="view">
+        <div class="card">
+          <div class="card-head"><div><h2>📋 Book a Service</h2><p>Get a professional at your door in under 2 hours</p></div></div>
+          <div class="pad">
+            <div class="steps">
+              <div class="step act"><div class="sc act">1</div><div class="sl">Choose Service</div></div>
+              <div class="step"><div class="sc">2</div><div class="sl">Your Details</div></div>
+              <div class="step"><div class="sc">3</div><div class="sl">Schedule</div></div>
+              <div class="step"><div class="sc">4</div><div class="sl">Confirm</div></div>
+            </div>
+            <div class="svc-grid" id="book-svc-grid">
+              <div class="svc-card" onclick="pickSvc(this,'Plumber','🔧')"><span class="svc-ico">🔧</span><div class="svc-nm">Plumber</div></div>
+              <div class="svc-card" onclick="pickSvc(this,'Electrician','⚡')"><span class="svc-ico">⚡</span><div class="svc-nm">Electrician</div></div>
+              <div class="svc-card" onclick="pickSvc(this,'Housekeeping','🏠')"><span class="svc-ico">🏠</span><div class="svc-nm">Housekeeping</div></div>
+              <div class="svc-card" onclick="pickSvc(this,'Painter','🎨')"><span class="svc-ico">🎨</span><div class="svc-nm">Painter</div></div>
+              <div class="svc-card" onclick="pickSvc(this,'Carpenter','🔩')"><span class="svc-ico">🔩</span><div class="svc-nm">Carpenter</div></div>
+              <div class="svc-card" onclick="pickSvc(this,'AC Service','❄️')"><span class="svc-ico">❄️</span><div class="svc-nm">AC Service</div></div>
+              <div class="svc-card" onclick="pickSvc(this,'Gardener','🌿')"><span class="svc-ico">🌿</span><div class="svc-nm">Gardener</div></div>
+              <div class="svc-card" onclick="pickSvc(this,'Locksmith','🔒')"><span class="svc-ico">🔒</span><div class="svc-nm">Locksmith</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="card">
+            <div class="card-head"><div><h2>Your Details</h2></div></div>
+            <div class="pad">
+              <div class="form-grid">
+                <div class="fgroup"><label>Full Name</label><input placeholder="Your name"/></div>
+                <div class="fgroup"><label>Phone</label><input placeholder="+91 98765 43210"/></div>
+                <div class="fgroup full"><label>Address</label><input placeholder="Door No., Street, Colony, Pincode"/></div>
+                <div class="fgroup"><label>Service Selected</label><input id="book-svc-name" placeholder="Select above" readonly style="background:var(--bg3)"/></div>
+                <div class="fgroup"><label>Urgency</label><select><option>🔴 Emergency (within 2hr)</option><option>🟡 Today</option><option>🟢 Schedule later</option></select></div>
+                <div class="fgroup"><label>Preferred Date</label><input type="date"/></div>
+                <div class="fgroup"><label>Preferred Time</label><input type="time"/></div>
+                <div class="fgroup full"><label>Problem Description</label><textarea placeholder="Describe the issue in detail..."></textarea></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h2>📍 Your Location</h2></div></div>
+            <div class="pad">
+              <div class="form-grid">
+                <div class="fgroup"><label>Landmark</label><input placeholder="Near Hanuman temple..."/></div>
+                <div class="fgroup"><label>Pincode</label><input placeholder="523001"/></div>
+                <div class="fgroup full"><label>GPS Coordinates</label><input value="15.5057° N, 80.0499° E" readonly style="opacity:.6;font-family:var(--mono);font-size:.75rem"/></div>
+              </div>
+              <button class="btn btn-outline" style="width:100%;justify-content:center;margin:.5rem 0;" onclick="toast('📡','GPS Detected','Using current location: Ongole, AP')">📡 Detect My Location</button>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.875rem;margin-bottom:.875rem;">
+                <div style="font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:.5rem;">⚡ Nearest Available Workers</div>
+                <div style="display:flex;flex-direction:column;gap:.4rem;">
+                  <div style="display:flex;justify-content:space-between;font-size:.76rem;"><span>⚡ Ravi Kumar</span><span style="color:var(--green);font-weight:700">2.3km · Available</span></div>
+                  <div style="display:flex;justify-content:space-between;font-size:.76rem;"><span>🔧 Suresh Babu</span><span style="color:var(--yellow);font-weight:700">1.1km · En Route</span></div>
+                  <div style="display:flex;justify-content:space-between;font-size:.76rem;"><span>❄️ Srinivas K.</span><span style="color:var(--green);font-weight:700">1.9km · Available</span></div>
+                </div>
+              </div>
+              <button class="btn btn-blue btn-lg" style="width:100%;justify-content:center;" onclick="confirmBooking()">✅ Confirm Booking</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIVE TRACK -->
+      <div id="cv-track" class="view">
+        <div class="card" style="margin-bottom:1.25rem;border-color:rgba(37,99,235,.2);">
+          <div class="card-head">
+            <div><h2>🏍 Suresh Babu is on the way</h2><p>Booking #SRV-2850 · Plumber · Est. arrival: <span id="eta-text" style="color:var(--orange);font-weight:800">~12 min</span></p></div>
+            <div class="card-head-actions">
+              <div class="live-pill"><span class="live-dot"></span>GPS LIVE</div>
+              <button class="btn btn-teal-soft btn-sm" onclick="toast('📞','Calling Worker','Connecting to Suresh Babu...')">📞 Call</button>
+            </div>
+          </div>
+          <div class="pad">
+            <div class="steps" style="margin-bottom:0">
+              <div class="step done"><div class="sc done">✓</div><div class="sl">Booked</div></div>
+              <div class="step done"><div class="sc done">✓</div><div class="sl">Accepted</div></div>
+              <div class="step act"><div class="sc act">🏍</div><div class="sl">On the Way</div></div>
+              <div class="step"><div class="sc">4</div><div class="sl">Arrived</div></div>
+              <div class="step"><div class="sc">5</div><div class="sl">Job Done</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GPS MAP -->
+        <div class="map-container">
+          <div class="map-header">
+            <div>
+              <h2 style="font-size:.875rem;font-weight:800;margin-bottom:2px;">🗺️ Ongole, Andhra Pradesh — Live Worker Map</h2>
+              <p style="font-size:.7rem;color:var(--text3);">GPS coordinates updating every 2.5 seconds · 4 workers visible</p>
+            </div>
+            <div style="display:flex;gap:.5rem;align-items:center;">
+              <div class="live-pill"><span class="live-dot"></span>LIVE GPS</div>
+              <button class="btn btn-outline btn-sm" onclick="toast('🔔','Alert','You will be notified when worker arrives')">🔔 Notify on Arrival</button>
+            </div>
+          </div>
+          <div class="map-canvas" id="mapCanvas">
+            <!-- Roads -->
+            <div class="road h major" style="top:28%"></div>
+            <div class="road h" style="top:45%"></div>
+            <div class="road h major" style="top:60%"></div>
+            <div class="road h" style="top:76%"></div>
+            <div class="road v" style="left:20%"></div>
+            <div class="road v major" style="left:38%"></div>
+            <div class="road v" style="left:58%"></div>
+            <div class="road v major" style="left:74%"></div>
+            <!-- Road labels -->
+            <div class="road-label" style="top:26%;left:5%">MG Road</div>
+            <div class="road-label" style="top:58%;left:5%">Station Rd</div>
+            <div class="road-label" style="top:3%;left:37%">NH-16</div>
+            <div class="road-label" style="top:3%;left:73%">Trunk Rd</div>
+
+            <!-- Route SVG -->
+            <svg class="route-svg" id="routeSvg">
+              <defs>
+                <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3z" fill="rgba(234,88,12,.7)"/>
+                </marker>
+                <filter id="blur-f"><feGaussianBlur stdDeviation="1.5"/></filter>
+              </defs>
+              <!-- Shadow/glow under route -->
+              <polyline id="route-shadow" points="" stroke="rgba(234,88,12,.15)" stroke-width="8" fill="none" stroke-linecap="round" filter="url(#blur-f)"/>
+              <!-- Main route line -->
+              <polyline id="route-line" points="" stroke="rgba(234,88,12,.7)" stroke-width="3" fill="none" stroke-dasharray="6,3" stroke-linecap="round" marker-end="url(#arrowhead)"/>
+              <!-- Completed portion (blue) -->
+              <polyline id="route-done" points="" stroke="rgba(37,99,235,.5)" stroke-width="3" fill="none" stroke-linecap="round"/>
+            </svg>
+
+            <!-- YOUR LOCATION pin -->
+            <div class="map-pin pin-you" id="pin-you" style="left:46%;top:61%;">
+              <div style="position:relative;">
+                <div class="ping-ring"></div>
+                <div class="pin-body" style="border-radius:50%;transform:none;"><span>🏠</span></div>
+              </div>
+              <div class="pin-label" style="background:var(--blue);color:white;border-color:var(--blue);">📍 You</div>
+            </div>
+
+            <!-- WORKER PIN (animated) -->
+            <div class="map-pin pin-enroute" id="pin-worker" style="left:71%;top:38%;">
+              <div class="pin-body"><span>🏍</span></div>
+              <div class="pin-label" id="worker-pin-label">Suresh · 2.8km</div>
+            </div>
+
+            <!-- OTHER WORKERS -->
+            <div class="map-pin pin-available" style="left:22%;top:35%;">
+              <div class="pin-body"><span>⚡</span></div>
+              <div class="pin-label">Ravi · 2.3km</div>
+            </div>
+            <div class="map-pin pin-available" style="left:76%;top:70%;">
+              <div class="pin-body"><span>🏠</span></div>
+              <div class="pin-label">Prabhavati · 0.8km</div>
+            </div>
+            <div class="map-pin pin-available" style="left:58%;top:20%;">
+              <div class="pin-body"><span>❄️</span></div>
+              <div class="pin-label">Srinivas · 1.9km</div>
+            </div>
+
+            <!-- Animated car dot -->
+            <div class="car-dot" id="car-dot" style="left:71%;top:38%;"></div>
+
+            <!-- GPS info overlay -->
+            <div class="gps-bar">
+              <div class="gps-row"><span class="gps-label">Worker GPS</span></div>
+              <div class="gps-row"><span class="gps-label">Lat:</span><span class="gps-val live" id="gps-lat">15.5182</span></div>
+              <div class="gps-row"><span class="gps-label">Lng:</span><span class="gps-val live" id="gps-lng">80.0287</span></div>
+              <div class="gps-row"><span class="gps-label">Speed:</span><span class="gps-val" id="gps-spd">22 km/h</span></div>
+              <div class="gps-row"><span class="gps-label">Distance:</span><span class="gps-val" id="gps-dist">2.8 km</span></div>
+              <div class="gps-row"><span class="gps-label">Updated:</span><span class="gps-val live" id="gps-time">now</span></div>
+            </div>
+
+            <!-- ETA card -->
+            <div class="eta-card">
+              <div>
+                <div class="eta-val" id="eta-min">12</div>
+                <div class="eta-lbl">min away</div>
+              </div>
+              <div style="width:1px;height:32px;background:var(--border);"></div>
+              <div>
+                <div id="eta-dist-card" class="eta-dist">2.8 km</div>
+                <div class="eta-lbl">distance</div>
+              </div>
+              <div style="width:1px;height:32px;background:var(--border);"></div>
+              <div>
+                <div style="font-size:.78rem;font-weight:700;color:var(--teal)">🏍 En Route</div>
+                <div class="eta-lbl">Suresh Babu</div>
+              </div>
+            </div>
+          </div>
+          <div class="map-footer">
+            <div class="mf-item"><div class="mf-dot" style="background:var(--blue)"></div>Your Location</div>
+            <div class="mf-item"><div class="mf-dot" style="background:var(--green)"></div>Available</div>
+            <div class="mf-item"><div class="mf-dot" style="background:var(--orange)"></div>En Route (Your Worker)</div>
+            <div class="mf-item"><div class="mf-dot" style="background:var(--yellow)"></div>Busy</div>
+            <div class="mf-item" style="margin-left:auto;color:var(--text3);font-size:.68rem;">🔄 GPS updates every 2.5s</div>
+          </div>
+        </div>
+
+        <!-- Worker info card -->
+        <div class="g2">
+          <div class="card">
+            <div class="card-head"><div><h2>Worker Details</h2></div></div>
+            <div class="pad">
+              <div style="display:flex;align-items:center;gap:.875rem;margin-bottom:1rem;padding:.875rem;background:var(--bg3);border-radius:10px;">
+                <div style="width:48px;height:48px;border-radius:12px;background:rgba(234,88,12,.1);color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:800;flex-shrink:0;">SB</div>
+                <div>
+                  <div style="font-weight:800;font-size:.95rem;">Suresh Babu</div>
+                  <div style="font-size:.75rem;color:var(--text2);">🔧 Plumber · 8 yrs experience</div>
+                  <div style="display:flex;gap:4px;margin-top:4px;"><span class="bx bx-y"><span class="d"></span>En Route</span><span class="bx bx-t">✅ Verified</span></div>
+                </div>
+                <div style="margin-left:auto;text-align:right;">
+                  <div style="font-family:var(--serif);font-size:1.5rem;font-weight:900;color:var(--orange)" id="live-eta-card">12</div>
+                  <div style="font-size:.62rem;color:var(--text3);">min away</div>
+                </div>
+              </div>
+              <div class="g2" style="margin:0;">
+                <div style="background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:.75rem;"><div class="dk">Phone</div><div class="dv">+91 98765 43210</div></div>
+                <div style="background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:.75rem;"><div class="dk">Rating</div><div class="dv">⭐ 4.8 / 5.0 · 512 jobs</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h2>Journey Timeline</h2></div></div>
+            <div class="pad">
+              <div style="display:flex;flex-direction:column;gap:.625rem;" id="track-timeline">
+                <div style="display:flex;gap:.625rem;align-items:center;font-size:.78rem;"><div style="width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="color:var(--text2)">10:34 AM —</span><span style="font-weight:600">Booking placed</span></div>
+                <div style="display:flex;gap:.625rem;align-items:center;font-size:.78rem;"><div style="width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><span style="color:var(--text2)">10:36 AM —</span><span style="font-weight:600">Worker accepted</span></div>
+                <div style="display:flex;gap:.625rem;align-items:center;font-size:.78rem;"><div style="width:8px;height:8px;border-radius:50%;background:var(--orange);flex-shrink:0;animation:pulse 1.5s infinite"></div><span style="color:var(--text2)">10:38 AM —</span><span style="font-weight:700;color:var(--orange)">En route to you</span></div>
+                <div style="display:flex;gap:.625rem;align-items:center;font-size:.78rem;opacity:.45;"><div style="width:8px;height:8px;border-radius:50%;background:var(--border2);flex-shrink:0;"></div><span style="color:var(--text2)">Pending —</span><span style="font-weight:600">Worker arrives</span></div>
+                <div style="display:flex;gap:.625rem;align-items:center;font-size:.78rem;opacity:.45;"><div style="width:8px;height:8px;border-radius:50%;background:var(--border2);flex-shrink:0;"></div><span style="color:var(--text2)">Pending —</span><span style="font-weight:600">Job complete</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WORKERS -->
+      <div id="cv-workers" class="view">
+        <div class="wk-grid" id="c-wk-list"></div>
+      </div>
+
+      <!-- VACANCIES -->
+      <div id="cv-vacancies" class="view">
+        <div class="card">
+          <div class="card-head"><div><h2>💼 Job Vacancies</h2><p>200 open positions — Join our growing team</p></div><div class="live-pill"><span class="live-dot" style="background:var(--teal)"></span>200 Open</div></div>
+          <div class="pad"><div class="vac-list" id="c-vac-list"></div></div>
+        </div>
+      </div>
+
+      <!-- MY BOOKINGS -->
+      <div id="cv-mybookings" class="view">
+        <div class="card">
+          <div class="card-head"><div><h2>My Bookings</h2><p>All your service requests</p></div><button class="btn btn-blue btn-sm" onclick="cNav('book',null)">+ New</button></div>
+          <table><thead><tr><th>ID</th><th>Service</th><th>Worker</th><th>Date</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead><tbody>
+            <tr><td class="td-mn">#SRV-2851</td><td>⚡ Electrician</td><td>Ravi Kumar</td><td>Mar 6</td><td style="color:var(--green);font-weight:700">₹850</td><td><span class="bx bx-g"><span class="d"></span>Done</span></td><td><div class="td-acts"><button class="btn btn-ghost btn-sm" onclick="toast('⭐','Rate','Rate your experience')">Rate ⭐</button></div></td></tr>
+            <tr><td class="td-mn">#SRV-2850</td><td>🔧 Plumber</td><td>Suresh Babu</td><td>Mar 6</td><td style="color:var(--green);font-weight:700">₹620</td><td><span class="bx bx-y"><span class="d"></span>En Route</span></td><td><div class="td-acts"><button class="btn btn-blue-soft btn-sm" onclick="cNav('track',null)">📍 Track</button></div></td></tr>
+            <tr><td class="td-mn">#SRV-2848</td><td>❄️ AC Service</td><td>—</td><td>Mar 7</td><td style="color:var(--green);font-weight:700">₹1,200</td><td><span class="bx bx-gr">Scheduled</span></td><td><div class="td-acts"><button class="btn btn-red btn-sm" onclick="toast('❌','Cancelled','Booking cancelled')">Cancel</button></div></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+
+      <!-- CONTACT -->
+      <div id="cv-contact" class="view">
+        <div class="g2">
+          <div class="card">
+            <div class="card-head"><div><h2>📞 Contact Us</h2></div></div>
+            <div class="pad">
+              <div class="form-grid">
+                <div class="fgroup"><label>Name</label><input placeholder="Your name"/></div>
+                <div class="fgroup"><label>Phone</label><input placeholder="+91"/></div>
+                <div class="fgroup full"><label>Subject</label><select><option>General Enquiry</option><option>Complaint</option><option>Feedback</option><option>Emergency</option></select></div>
+                <div class="fgroup full"><label>Message</label><textarea placeholder="How can we help?"></textarea></div>
+              </div>
+              <button class="btn btn-blue" style="width:100%;justify-content:center;margin-top:.625rem;" onclick="toast('✅','Message Sent','We reply within 2 hours')">Send Message</button>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:.875rem;">
+              <div class="card-head"><div><h2>Our Info</h2></div></div>
+              <div class="pad" style="display:flex;flex-direction:column;gap:.625rem;">
+                <div style="display:flex;gap:.625rem;align-items:center;font-size:.8rem;"><div style="width:36px;height:36px;border-radius:9px;background:var(--blueg);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem;">📍</div><div><div style="font-size:.62rem;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Address</div><div style="font-weight:600;">42 Service Hub, Ongole, AP 523001</div></div></div>
+                <div style="display:flex;gap:.625rem;align-items:center;font-size:.8rem;"><div style="width:36px;height:36px;border-radius:9px;background:var(--greeng);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem;">📞</div><div><div style="font-size:.62rem;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Phone</div><div style="font-weight:600;">+91 98765 43210</div></div></div>
+                <div style="display:flex;gap:.625rem;align-items:center;font-size:.8rem;"><div style="width:36px;height:36px;border-radius:9px;background:var(--orangeg);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem;">✉️</div><div><div style="font-size:.62rem;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Email</div><div style="font-weight:600;">hello@hsbp.in</div></div></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><div><h2>Hours</h2></div><div class="live-pill"><span class="live-dot"></span>Open Now</div></div>
+              <div style="padding:0 1.25rem;">
+                <div class="stat-row"><span class="stat-k">Mon – Fri</span><span class="stat-v">8:00 AM – 10:00 PM</span></div>
+                <div class="stat-row"><span class="stat-k">Saturday</span><span class="stat-v">9:00 AM – 9:00 PM</span></div>
+                <div class="stat-row"><span class="stat-k">Sunday</span><span class="stat-v">10:00 AM – 6:00 PM</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /customer app -->
+
+<!-- ════════════════════════════
+     ADMIN APP
+════════════════════════════ -->
+<div id="app-admin" class="app">
+  <aside class="sidebar">
+    <div class="sb-top">
+      <div class="sb-logo">
+        <div class="sb-mark admin">A</div>
+        <div>
+          <div class="sb-title admin">Home Service<br><em>Booking Platform</em></div>
+          <div class="sb-portal">Admin Dashboard</div>
+        </div>
+      </div>
+    </div>
+    <div class="sb-user">
+      <div class="u-av a">AD</div>
+      <div><div class="u-nm">Super Admin</div><div class="u-rl">admin@hsbp.in</div></div>
+      <div class="ondot"></div>
+    </div>
+    <div class="nav-sec">Overview</div>
+    <div class="nav-item on admin-on" onclick="aN('overview',this)"><span class="ni-ico">◉</span>Dashboard</div>
+    <div class="nav-item" onclick="aN('analytics',this)"><span class="ni-ico">📈</span>Analytics</div>
+    <div class="nav-sec">Manage</div>
+    <div class="nav-item" onclick="aN('bookings',this)"><span class="ni-ico">📋</span>All Bookings<span class="ni-badge nb-orange">68</span></div>
+    <div class="nav-item" onclick="aN('workers-mgmt',this)"><span class="ni-ico">👷</span>Workers<span class="ni-badge nb-blue">200</span></div>
+    <div class="nav-item" onclick="aN('customers-mgmt',this)"><span class="ni-ico">👥</span>Customers</div>
+    <div class="nav-item" onclick="aN('vacancies-mgmt',this)"><span class="ni-ico">💼</span>Vacancies</div>
+    <div class="nav-item" onclick="aN('live-tracking',this)"><span class="ni-ico">📍</span>Live Tracking<span class="ni-badge nb-red">Live</span></div>
+    <div class="nav-sec">System</div>
+    <div class="nav-item" onclick="aN('activity',this)"><span class="ni-ico">◍</span>Activity Log<span class="ni-badge nb-green">Live</span></div>
+    <div class="nav-item" onclick="aN('settings',this)"><span class="ni-ico">◧</span>Settings</div>
+    <div class="sb-bottom">
+      <button class="logout" onclick="doLogout()">⏻ &nbsp;Logout Admin</button>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <div class="tb-crumb"><span>Admin</span><span class="sep">/</span><span class="cur" id="a-title">Dashboard</span></div>
+      <div class="tb-search"><span style="color:var(--text3);font-size:12px">⌕</span><input placeholder="Search bookings, workers..."/></div>
+      <div class="tb-actions">
+        <div class="tb-clock" id="a-clk">--:--</div>
+        <div class="ib" onclick="toast('🔔','3 Alerts','New pending bookings need assignment')"><span>🔔</span><div class="ndot"></div></div>
+        <button class="btn btn-orange" onclick="openM('m-add-booking')">+ New Booking</button>
+      </div>
+    </header>
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div id="av-overview" class="view on">
+        <div class="g4">
+          <div class="kpi blue" onclick="aN('bookings',null)">
+            <div class="kpi-top"><span class="kpi-label">Active Bookings</span><div class="kpi-icon blue">📋</div></div>
+            <div class="kpi-val">47</div>
+            <div class="kpi-sub"><span class="trend up">↑ 12%</span>18 in progress</div>
+          </div>
+          <div class="kpi green" onclick="aN('workers-mgmt',null)">
+            <div class="kpi-top"><span class="kpi-label">Total Workers</span><div class="kpi-icon green">👷</div></div>
+            <div class="kpi-val">200</div>
+            <div class="kpi-sub"><span class="trend up">+8 new</span>142 available</div>
+          </div>
+          <div class="kpi orange">
+            <div class="kpi-top"><span class="kpi-label">Revenue (March)</span><div class="kpi-icon orange">₹</div></div>
+            <div class="kpi-val">4.2L</div>
+            <div class="kpi-sub"><span class="trend up">↑ 18%</span>₹14.2k/day avg</div>
+          </div>
+          <div class="kpi purple" onclick="aN('customers-mgmt',null)">
+            <div class="kpi-top"><span class="kpi-label">Customers</span><div class="kpi-icon purple">👥</div></div>
+            <div class="kpi-val">1,248</div>
+            <div class="kpi-sub"><span class="trend up">+92</span>4.8★ avg rating</div>
+          </div>
+        </div>
+
+        <div class="g2">
+          <div class="card">
+            <div class="card-head"><div><h2>Bookings This Week</h2><p>Daily booking volume</p></div></div>
+            <div class="pad">
+              <div class="bar-chart" id="a-bar-chart"></div>
+              <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:.6rem;color:var(--text3);padding:0 3px;">
+                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h2>Services Breakdown</h2></div></div>
+            <div class="pad">
+              <div style="display:flex;align-items:center;gap:1.25rem;">
+                <svg width="100" height="100" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="36" fill="none" stroke="#e2e8f0" stroke-width="12"/>
+                  <circle cx="50" cy="50" r="36" fill="none" stroke="var(--blue)" stroke-width="12" stroke-dasharray="70 156" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
+                  <circle cx="50" cy="50" r="36" fill="none" stroke="var(--orange)" stroke-width="12" stroke-dasharray="44 182" stroke-dashoffset="-70" transform="rotate(-90 50 50)"/>
+                  <circle cx="50" cy="50" r="36" fill="none" stroke="var(--green)" stroke-width="12" stroke-dasharray="32 194" stroke-dashoffset="-114" transform="rotate(-90 50 50)"/>
+                  <circle cx="50" cy="50" r="36" fill="none" stroke="var(--purple)" stroke-width="12" stroke-dasharray="36 190" stroke-dashoffset="-146" transform="rotate(-90 50 50)"/>
+                  <text x="50" y="46" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="800" font-family="Fraunces">3.4k</text>
+                  <text x="50" y="57" text-anchor="middle" fill="var(--text3)" font-size="7">JOBS</text>
+                </svg>
+                <div style="flex:1;">
+                  <div style="display:flex;align-items:center;gap:.4rem;font-size:.73rem;margin-bottom:.4rem;"><div style="width:8px;height:8px;border-radius:2px;background:var(--blue);flex-shrink:0;"></div>Electrician<span style="margin-left:auto;font-weight:700;font-family:var(--mono);color:var(--blue);font-size:.68rem">1,124</span></div>
+                  <div style="display:flex;align-items:center;gap:.4rem;font-size:.73rem;margin-bottom:.4rem;"><div style="width:8px;height:8px;border-radius:2px;background:var(--orange);flex-shrink:0;"></div>Plumber<span style="margin-left:auto;font-weight:700;font-family:var(--mono);color:var(--orange);font-size:.68rem">748</span></div>
+                  <div style="display:flex;align-items:center;gap:.4rem;font-size:.73rem;margin-bottom:.4rem;"><div style="width:8px;height:8px;border-radius:2px;background:var(--green);flex-shrink:0;"></div>Housekeeping<span style="margin-left:auto;font-weight:700;font-family:var(--mono);color:var(--green);font-size:.68rem">546</span></div>
+                  <div style="display:flex;align-items:center;gap:.4rem;font-size:.73rem;"><div style="width:8px;height:8px;border-radius:2px;background:var(--purple);flex-shrink:0;"></div>Others<span style="margin-left:auto;font-weight:700;font-family:var(--mono);color:var(--purple);font-size:.68rem">994</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="g2">
+          <div class="card">
+            <div class="card-head"><div><h2>Recent Bookings</h2></div><button class="btn btn-ghost btn-sm" onclick="aN('bookings',null)">View all →</button></div>
+            <table><thead><tr><th>ID</th><th>Customer</th><th>Service</th><th>Worker</th><th>Status</th><th>Act</th></tr></thead>
+            <tbody id="a-recent-tbody"></tbody></table>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h2>Live Workers</h2></div><div class="live-pill"><span class="live-dot"></span>Live</div></div>
+            <div id="a-live-workers"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANALYTICS -->
+      <div id="av-analytics" class="view">
+        <div class="g3">
+          <div class="card">
+            <div class="card-head"><div><h2>Revenue by Service</h2></div></div>
+            <div class="pad">
+              <div class="prog-row"><span class="prog-label">Electrician</span><div class="prog-bg"><div class="prog-fill" style="width:72%;background:var(--blue)"></div></div><span style="font-size:.7rem;font-weight:700;color:var(--blue);width:42px;text-align:right">₹1.2L</span></div>
+              <div class="prog-row"><span class="prog-label">Plumber</span><div class="prog-bg"><div class="prog-fill" style="width:54%;background:var(--orange)"></div></div><span style="font-size:.7rem;font-weight:700;color:var(--orange);width:42px;text-align:right">₹0.9L</span></div>
+              <div class="prog-row"><span class="prog-label">AC Service</span><div class="prog-bg"><div class="prog-fill" style="width:42%;background:var(--teal)"></div></div><span style="font-size:.7rem;font-weight:700;color:var(--teal);width:42px;text-align:right">₹0.7L</span></div>
+              <div class="prog-row"><span class="prog-label">Housekeeping</span><div class="prog-bg"><div class="prog-fill" style="width:30%;background:var(--green)"></div></div><span style="font-size:.7rem;font-weight:700;color:var(--green);width:42px;text-align:right">₹0.5L</span></div>
+              <div class="prog-row"><span class="prog-label">Painting</span><div class="prog-bg"><div class="prog-fill" style="width:24%;background:var(--purple)"></div></div><span style="font-size:.7rem;font-weight:700;color:var(--purple);width:42px;text-align:right">₹0.4L</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h2>Booking Outcomes</h2></div></div>
+            <div class="pad">
+              <div class="stat-row"><span class="stat-k">✅ Completed</span><span class="stat-v" style="color:var(--green)">2,847 (83%)</span></div>
+              <div class="stat-row"><span class="stat-k">🔵 In Progress</span><span class="stat-v" style="color:var(--blue)">285 (8%)</span></div>
+              <div class="stat-row"><span class="stat-k">🟡 Pending</span><span class="stat-v" style="color:var(--yellow)">198 (6%)</span></div>
+              <div class="stat-row"><span class="stat-k">❌ Cancelled</span><span class="stat-v" style="color:var(--red)">82 (3%)</span></div>
+              <div class="stat-row"><span class="stat-k">Avg Response</span><span class="stat-v">8 min</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h2>Platform Health</h2></div></div>
+            <div class="pad">
+              <div class="stat-row"><span class="stat-k">Worker utilization</span><span class="stat-v" style="color:var(--orange)">71%</span></div>
+              <div class="stat-row"><span class="stat-k">Avg job value</span><span class="stat-v" style="color:var(--green)">₹1,230</span></div>
+              <div class="stat-row"><span class="stat-k">Repeat rate</span><span class="stat-v" style="color:var(--blue)">64%</span></div>
+              <div class="stat-row"><span class="stat-k">Customer rating</span><span class="stat-v">4.8 ★</span></div>
+              <div class="stat-row"><span class="stat-k">New customers</span><span class="stat-v" style="color:var(--green)">+92 this month</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h2>🏆 Top Workers This Month</h2></div></div>
+          <table><thead><tr><th>Rank</th><th>Worker</th><th>Trade</th><th>Jobs</th><th>Earnings</th><th>Rating</th><th>Status</th></tr></thead><tbody>
+            <tr><td>🥇</td><td class="td-fw">Ravi Kumar</td><td>⚡ Electrician</td><td style="color:var(--green);font-weight:700">28</td><td style="color:var(--green);font-weight:700">₹24,800</td><td><span class="stars">★★★★★</span> 4.9</td><td><span class="bx bx-g"><span class="d"></span>Available</span></td></tr>
+            <tr><td>🥈</td><td class="td-fw">Suresh Babu</td><td>🔧 Plumber</td><td style="color:var(--green);font-weight:700">24</td><td style="color:var(--green);font-weight:700">₹19,200</td><td><span class="stars">★★★★★</span> 4.8</td><td><span class="bx bx-y"><span class="d"></span>Busy</span></td></tr>
+            <tr><td>🥉</td><td class="td-fw">Prabhavati D.</td><td>🏠 Housekeeping</td><td style="color:var(--green);font-weight:700">21</td><td style="color:var(--green);font-weight:700">₹12,600</td><td><span class="stars">★★★★★</span> 5.0</td><td><span class="bx bx-g"><span class="d"></span>Available</span></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+
+      <!-- ALL BOOKINGS -->
+      <div id="av-bookings" class="view">
+        <div class="card">
+          <div class="card-head"><div><h2>All Bookings</h2><p>Manage every service request</p></div><div class="card-head-actions"><button class="btn btn-outline btn-sm">↓ Export</button><button class="btn btn-orange btn-sm" onclick="openM('m-add-booking')">+ New</button></div></div>
+          <div class="filters">
+            <div class="chip on or" onclick="cOn(this,'or')">All (68)</div>
+            <div class="chip" onclick="cOn(this,'or')">Pending (8)</div>
+            <div class="chip" onclick="cOn(this,'or')">En Route (11)</div>
+            <div class="chip" onclick="cOn(this,'or')">In Progress (18)</div>
+            <div class="chip" onclick="cOn(this,'or')">Completed (27)</div>
+            <div class="f-right"><input class="f-input" placeholder="🔍 Search..."/><select class="f-select"><option>All Services</option><option>Electrician</option><option>Plumber</option></select></div>
+          </div>
+          <table><thead><tr><th><input type="checkbox"/></th><th>ID</th><th>Customer</th><th>Service</th><th>Worker</th><th>Date</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="a-bookings-tbody"></tbody></table>
+          <div class="pager"><span class="pg-info">Showing 1–8 of 68</span><div class="pg-btns"><button class="pg-btn">‹</button><button class="pg-btn on">1</button><button class="pg-btn">2</button><button class="pg-btn">3</button><button class="pg-btn">›</button></div></div>
+        </div>
+      </div>
+
+      <!-- WORKERS MGMT -->
+      <div id="av-workers-mgmt" class="view">
+        <div class="card">
+          <div class="card-head"><div><h2>Worker Management</h2><p>200 verified professionals</p></div><div class="card-head-actions"><button class="btn btn-outline btn-sm">↓ Export</button><button class="btn btn-orange btn-sm" onclick="openM('m-add-worker')">+ Add Worker</button></div></div>
+          <div class="filters">
+            <div class="chip on or" onclick="cOn(this,'or')">All (200)</div>
+            <div class="chip" onclick="cOn(this,'or')">Available (142)</div>
+            <div class="chip" onclick="cOn(this,'or')">Busy (38)</div>
+            <div class="chip" onclick="cOn(this,'or')">Offline (20)</div>
+            <div class="chip" onclick="cOn(this,'or')">⚠️ ID Pending</div>
+            <div class="f-right"><input class="f-input" placeholder="🔍 Search worker..."/></div>
+          </div>
+          <table><thead><tr><th><input type="checkbox"/></th><th>Worker</th><th>Trade</th><th>Exp.</th><th>Jobs</th><th>Rating</th><th>Location</th><th>ID Verified</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="a-workers-tbody"></tbody></table>
+          <div class="pager"><span class="pg-info">Showing 1–8 of 200</span><div class="pg-btns"><button class="pg-btn">‹</button><button class="pg-btn on">1</button><button class="pg-btn">2</button><button class="pg-btn">…</button><button class="pg-btn">20</button><button class="pg-btn">›</button></div></div>
+        </div>
+      </div>
+
+      <!-- CUSTOMERS MGMT -->
+      <div id="av-customers-mgmt" class="view">
+        <div class="card">
+          <div class="card-head"><div><h2>Customer Management</h2><p>1,248 registered customers</p></div><button class="btn btn-orange btn-sm" onclick="toast('➕','Add Customer','Opening form')">+ Add</button></div>
+          <div class="filters"><div class="chip on or" onclick="cOn(this,'or')">All (1,248)</div><div class="chip" onclick="cOn(this,'or')">Active (892)</div><div class="chip" onclick="cOn(this,'or')">Inactive (286)</div><div class="f-right"><input class="f-input" placeholder="🔍 Search..."/></div></div>
+          <table><thead><tr><th>Customer</th><th>Phone</th><th>Address</th><th>Bookings</th><th>Last Active</th><th>Total Spent</th><th>Actions</th></tr></thead>
+          <tbody id="a-customers-tbody"></tbody></table>
+          <div class="pager"><span class="pg-info">Showing 1–8 of 1,248</span><div class="pg-btns"><button class="pg-btn">‹</button><button class="pg-btn on">1</button><button class="pg-btn">2</button><button class="pg-btn">›</button></div></div>
+        </div>
+      </div>
+
+      <!-- VACANCIES MGMT -->
+      <div id="av-vacancies-mgmt" class="view">
+        <div class="card">
+          <div class="card-head"><div><h2>Vacancy Management</h2><p>200 total open positions</p></div><button class="btn btn-orange btn-sm" onclick="toast('💼','Post Vacancy','Opening form')">+ Post Vacancy</button></div>
+          <table><thead><tr><th>Role</th><th>Cat.</th><th>Open Slots</th><th>Applications</th><th>Pay / Day</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="a-vac-tbody"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ADMIN LIVE TRACKING -->
+      <div id="av-live-tracking" class="view">
+        <div class="g4" style="margin-bottom:1.25rem;">
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:1rem;box-shadow:var(--shadow);text-align:center;"><div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:.4rem;">Active Workers</div><div style="font-family:var(--serif);font-size:1.8rem;font-weight:900;color:var(--green)">142</div><div class="live-pill" style="justify-content:center;margin-top:.3rem;"><span class="live-dot"></span>Online Now</div></div>
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:1rem;box-shadow:var(--shadow);text-align:center;"><div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:.4rem;">En Route</div><div style="font-family:var(--serif);font-size:1.8rem;font-weight:900;color:var(--orange)">11</div><div style="font-size:.7rem;color:var(--text3);margin-top:.3rem;">To customers</div></div>
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:1rem;box-shadow:var(--shadow);text-align:center;"><div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:.4rem;">In Job</div><div style="font-family:var(--serif);font-size:1.8rem;font-weight:900;color:var(--blue)">27</div><div style="font-size:.7rem;color:var(--text3);margin-top:.3rem;">Active jobs</div></div>
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:1rem;box-shadow:var(--shadow);text-align:center;"><div style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:.4rem;">Offline</div><div style="font-family:var(--serif);font-size:1.8rem;font-weight:900;color:var(--text3)">20</div><div style="font-size:.7rem;color:var(--text3);margin-top:.3rem;">Not available</div></div>
+        </div>
+        <div class="map-container" style="margin-bottom:0;">
+          <div class="map-header">
+            <div><h2 style="font-size:.875rem;font-weight:800;">🗺️ Admin — All Worker Locations · Ongole, AP</h2><p style="font-size:.7rem;color:var(--text3);">200 workers tracked · GPS refreshes every 3 seconds</p></div>
+            <div style="display:flex;gap:.5rem;align-items:center;"><div class="live-pill"><span class="live-dot"></span>200 WORKERS</div></div>
+          </div>
+          <div class="map-canvas" style="height:420px;" id="adminMapCanvas">
+            <div class="road h major" style="top:28%"></div>
+            <div class="road h" style="top:45%"></div>
+            <div class="road h major" style="top:62%"></div>
+            <div class="road h" style="top:78%"></div>
+            <div class="road v" style="left:18%"></div>
+            <div class="road v major" style="left:35%"></div>
+            <div class="road v" style="left:55%"></div>
+            <div class="road v major" style="left:72%"></div>
+            <div class="road-label" style="top:26%;left:3%">MG Road</div>
+            <div class="road-label" style="top:60%;left:3%">Station Rd</div>
+            <div class="road-label" style="top:3%;left:34%">NH-16</div>
+            <!-- Multiple worker pins for admin view -->
+            <div class="map-pin pin-available" id="a-pin-rk" style="left:22%;top:38%;"><div class="pin-body"><span>⚡</span></div><div class="pin-label">Ravi · Available</div></div>
+            <div class="map-pin pin-enroute" id="a-pin-sb" style="left:65%;top:42%;"><div class="pin-body"><span>🔧</span></div><div class="pin-label">Suresh · En Route</div></div>
+            <div class="map-pin pin-available" id="a-pin-pd" style="left:48%;top:68%;"><div class="pin-body"><span>🏠</span></div><div class="pin-label">Prabhavati · Available</div></div>
+            <div class="map-pin pin-busy" id="a-pin-mr" style="left:78%;top:30%;"><div class="pin-body"><span>🎨</span></div><div class="pin-label">Murali · In Job</div></div>
+            <div class="map-pin pin-available" id="a-pin-sk" style="left:35%;top:55%;"><div class="pin-body"><span>❄️</span></div><div class="pin-label">Srinivas · Available</div></div>
+            <div class="map-pin pin-offline" style="left:58%;top:24%;"><div class="pin-body"><span>🔩</span></div><div class="pin-label">Venkata · Offline</div></div>
+            <div class="map-pin pin-available" style="left:15%;top:62%;"><div class="pin-body"><span>🌿</span></div><div class="pin-label">Kiran · Available</div></div>
+            <div class="map-pin pin-enroute" style="left:82%;top:60%;"><div class="pin-body"><span>🔒</span></div><div class="pin-label">Ramu · En Route</div></div>
+            <div class="gps-bar" style="top:1rem;right:1rem;">
+              <div class="gps-row"><span class="gps-label" style="font-weight:800;font-size:.7rem;">Fleet Overview</span></div>
+              <div class="gps-row"><span class="gps-label">Online:</span><span class="gps-val" style="color:var(--green)">142 workers</span></div>
+              <div class="gps-row"><span class="gps-label">En Route:</span><span class="gps-val live" style="color:var(--orange)" id="admin-enroute">11</span></div>
+              <div class="gps-row"><span class="gps-label">In Job:</span><span class="gps-val" style="color:var(--blue)">27</span></div>
+              <div class="gps-row"><span class="gps-label">GPS Sync:</span><span class="gps-val live" id="admin-sync">3s ago</span></div>
+            </div>
+          </div>
+          <div class="map-footer">
+            <div class="mf-item"><div class="mf-dot" style="background:var(--green)"></div>Available</div>
+            <div class="mf-item"><div class="mf-dot" style="background:var(--orange)"></div>En Route</div>
+            <div class="mf-item"><div class="mf-dot" style="background:var(--yellow)"></div>In Job</div>
+            <div class="mf-item"><div class="mf-dot" style="background:var(--text3)"></div>Offline</div>
+            <div class="mf-item" style="margin-left:auto;font-size:.68rem;color:var(--text3);">🔄 Auto-refresh every 3s</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVITY -->
+      <div id="av-activity" class="view">
+        <div class="card">
+          <div class="card-head"><div><h2>Activity Log</h2><p>All system events in real-time</p></div><div class="live-pill"><span class="live-dot"></span>Live Feed</div></div>
+          <div id="a-activity-feed"></div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div id="av-settings" class="view">
+        <div class="g2">
+          <div class="card">
+            <div class="card-head"><div><h2>Platform Controls</h2></div></div>
+            <div style="padding:0 1.25rem;">
+              <div class="tog-row"><div class="tog-label"><h4>Live GPS Tracking</h4><p>Real-time worker location sharing</p></div><div class="tog on" onclick="this.classList.toggle('on')"><div class="tog-th"></div></div></div>
+              <div class="tog-row"><div class="tog-label"><h4>SMS Notifications</h4><p>Alert customers & workers via SMS</p></div><div class="tog on" onclick="this.classList.toggle('on')"><div class="tog-th"></div></div></div>
+              <div class="tog-row"><div class="tog-label"><h4>Auto Worker Assignment</h4><p>AI assigns nearest available worker</p></div><div class="tog" onclick="this.classList.toggle('on')"><div class="tog-th"></div></div></div>
+              <div class="tog-row"><div class="tog-label"><h4>Online Booking</h4><p>Allow customer self-booking</p></div><div class="tog on" onclick="this.classList.toggle('on')"><div class="tog-th"></div></div></div>
+              <div class="tog-row"><div class="tog-label"><h4>Maintenance Mode</h4><p>Pause all new bookings</p></div><div class="tog" onclick="this.classList.toggle('on')"><div class="tog-th"></div></div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h2>Company Settings</h2></div></div>
+            <div class="pad">
+              <div class="form-grid">
+                <div class="fgroup full"><label>Company Name</label><input value="Home Service Booking Platform"/></div>
+                <div class="fgroup"><label>Phone</label><input value="+91 98765 43210"/></div>
+                <div class="fgroup"><label>Email</label><input value="admin@hsbp.in"/></div>
+                <div class="fgroup"><label>City</label><input value="Ongole"/></div>
+                <div class="fgroup"><label>Service Radius (km)</label><input type="number" value="25"/></div>
+              </div>
+              <button class="btn btn-orange" style="width:100%;justify-content:center;margin-top:.625rem;" onclick="toast('✅','Saved','Settings updated')">Save Changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════ MODALS ════════ -->
+<div id="m-booking-detail" class="overlay">
+  <div class="modal">
+    <div class="modal-head"><div><h2>Booking Details</h2><p class="td-mn">#SRV-2851</p></div><button class="x-btn" onclick="closeM('m-booking-detail')">✕</button></div>
+    <div class="modal-body">
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1rem;"><span class="bx bx-y"><span class="d"></span>En Route</span><span class="bx bx-b">⚡ Electrician</span><span style="font-size:.68rem;color:var(--text3);margin-left:auto;">Mar 6, 10:34 AM</span></div>
+      <div class="dp-grid">
+        <div class="dp"><div class="dk">Customer</div><div class="dv">Priya Reddy</div></div>
+        <div class="dp"><div class="dk">Phone</div><div class="dv">+91 98765 43210</div></div>
+        <div class="dp full"><div class="dk">Address</div><div class="dv">Door 14, Gandhi Nagar, Ongole — 523001</div></div>
+        <div class="dp"><div class="dk">Worker</div><div class="dv">Ravi Kumar ⭐ 4.9</div></div>
+        <div class="dp"><div class="dk">ETA</div><div class="dv">~8 min · 2.3km</div></div>
+        <div class="dp"><div class="dk">Amount</div><div class="dv" style="color:var(--green)">₹850</div></div>
+        <div class="dp"><div class="dk">Urgency</div><div class="dv">🔴 Emergency</div></div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:.875rem;"><div class="dk" style="margin-bottom:4px;">Description</div><p style="font-size:.8rem;color:var(--text2);line-height:1.55;">Main hall switchboard sparking. Two bedroom lights not working. Bring extra wiring.</p></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-red btn-sm" onclick="closeM('m-booking-detail');toast('❌','Cancelled','Booking cancelled')">Cancel</button><button class="btn btn-outline btn-sm" onclick="toast('📞','Calling','Connecting...')">📞 Call</button><button class="btn btn-orange btn-sm" onclick="closeM('m-booking-detail');toast('✅','Done','Marked complete!')">Mark Done</button></div>
+  </div>
+</div>
+
+<div id="m-worker-detail" class="overlay">
+  <div class="modal">
+    <div class="modal-head"><div><h2>Worker Profile</h2><p>⚡ Electrician · ID Verified</p></div><button class="x-btn" onclick="closeM('m-worker-detail')">✕</button></div>
+    <div class="modal-body">
+      <div style="display:flex;align-items:center;gap:.875rem;margin-bottom:1rem;padding:.875rem;background:var(--bg3);border:1px solid var(--border);border-radius:10px;">
+        <div style="width:48px;height:48px;border-radius:12px;background:var(--blueg);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;font-family:var(--mono);flex-shrink:0;">RK</div>
+        <div><div style="font-weight:800;font-size:.95rem;">Ravi Kumar</div><div style="font-size:.75rem;color:var(--text2)">⚡ Electrician</div><div style="display:flex;gap:4px;margin-top:4px;"><span class="bx bx-g"><span class="d"></span>Available</span><span class="bx bx-t">✅ Verified</span></div></div>
+      </div>
+      <div class="dp-grid">
+        <div class="dp"><div class="dk">Phone</div><div class="dv">+91 98765 43210</div></div>
+        <div class="dp"><div class="dk">Rating</div><div class="dv">⭐ 4.9 / 5.0</div></div>
+        <div class="dp"><div class="dk">Jobs Done</div><div class="dv" style="color:var(--green)">340</div></div>
+        <div class="dp"><div class="dk">March Earnings</div><div class="dv" style="color:var(--orange)">₹24,800</div></div>
+        <div class="dp full"><div class="dk">Address</div><div class="dv">Street 8, Srinivas Nagar, Ongole — 523001</div></div>
+        <div class="dp"><div class="dk">Aadhaar</div><div class="dv" style="color:var(--green)">✅ Verified</div></div>
+        <div class="dp"><div class="dk">Joined</div><div class="dv">Jan 12, 2024</div></div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-red btn-sm" onclick="closeM('m-worker-detail');toast('🚫','Suspended','Worker suspended')">Suspend</button><button class="btn btn-outline btn-sm" onclick="toast('📞','Calling','Connecting...')">📞 Call</button><button class="btn btn-orange btn-sm" onclick="closeM('m-worker-detail');toast('✅','Saved','Profile updated')">Edit & Save</button></div>
+  </div>
+</div>
+
+<div id="m-add-booking" class="overlay">
+  <div class="modal">
+    <div class="modal-head"><div><h2>New Service Booking</h2><p>Create and assign a booking</p></div><button class="x-btn" onclick="closeM('m-add-booking')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="fgroup"><label>Customer Name</label><input placeholder="Full name"/></div>
+        <div class="fgroup"><label>Phone</label><input placeholder="+91"/></div>
+        <div class="fgroup full"><label>Address</label><input placeholder="Full address with pincode"/></div>
+        <div class="fgroup"><label>Service</label><select><option>⚡ Electrician</option><option>🔧 Plumber</option><option>🏠 Housekeeping</option><option>🎨 Painter</option><option>❄️ AC Service</option><option>🔩 Carpenter</option></select></div>
+        <div class="fgroup"><label>Urgency</label><select><option>🔴 Emergency</option><option>🟡 Today</option><option>🟢 Schedule</option></select></div>
+        <div class="fgroup"><label>Date</label><input type="date"/></div>
+        <div class="fgroup"><label>Time</label><input type="time"/></div>
+        <div class="fgroup"><label>Assign Worker</label><select><option>🔄 Auto Assign</option><option>Ravi Kumar</option><option>Suresh Babu</option><option>Prabhavati D.</option></select></div>
+        <div class="fgroup full"><label>Description</label><textarea placeholder="Describe the issue..."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-outline btn-sm" onclick="closeM('m-add-booking')">Cancel</button><button class="btn btn-orange btn-sm" onclick="closeM('m-add-booking');toast('✅','Booking Created','Worker notified via SMS')">Create Booking</button></div>
+  </div>
+</div>
+
+<div id="m-add-worker" class="overlay">
+  <div class="modal">
+    <div class="modal-head"><div><h2>Add New Worker</h2><p>Register a professional</p></div><button class="x-btn" onclick="closeM('m-add-worker')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="fgroup"><label>Full Name</label><input placeholder="Worker's full name"/></div>
+        <div class="fgroup"><label>Phone</label><input placeholder="+91"/></div>
+        <div class="fgroup"><label>Trade</label><select><option>⚡ Electrician</option><option>🔧 Plumber</option><option>🏠 Housekeeping</option><option>🎨 Painter</option><option>🔩 Carpenter</option><option>❄️ AC Service</option></select></div>
+        <div class="fgroup"><label>Experience (yrs)</label><input type="number" min="0" placeholder="0"/></div>
+        <div class="fgroup full"><label>Address</label><input placeholder="Street, Colony, Pincode"/></div>
+        <div class="fgroup"><label>Aadhaar No.</label><input placeholder="XXXX XXXX XXXX"/></div>
+        <div class="fgroup"><label>Daily Rate (₹)</label><input placeholder="800"/></div>
+        <div class="fgroup"><label>ID Status</label><select><option>⏳ Pending Verification</option><option>✅ Verified</option></select></div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-outline btn-sm" onclick="closeM('m-add-worker')">Cancel</button><button class="btn btn-orange btn-sm" onclick="closeM('m-add-worker');toast('✅','Worker Added','Profile created, ID check pending')">Save Worker</button></div>
+  </div>
+</div>
+
+<!-- BOOK CONFIRM -->
+<div id="m-book-confirm" class="overlay">
+  <div class="modal">
+    <div class="modal-head"><div><h2>🎉 Booking Confirmed!</h2><p id="m-bc-id">#SRV-2852 — Worker assigned</p></div><button class="x-btn" onclick="closeM('m-book-confirm')">✕</button></div>
+    <div class="modal-body">
+      <div class="dp-grid">
+        <div class="dp"><div class="dk">Service</div><div class="dv" id="m-bc-svc">—</div></div>
+        <div class="dp"><div class="dk">Assigned Worker</div><div class="dv">Suresh Babu</div></div>
+        <div class="dp"><div class="dk">ETA</div><div class="dv">~18 min</div></div>
+        <div class="dp"><div class="dk">Status</div><div class="dv"><span class="bx bx-y"><span class="d"></span>En Route</span></div></div>
+      </div>
+      <div style="background:rgba(22,163,74,.05);border:1px solid rgba(22,163,74,.15);border-radius:9px;padding:.875rem;font-size:.8rem;color:var(--text2);line-height:1.6;">✅ Your booking is confirmed and the worker has been notified via SMS. You can track their live GPS location from the <strong>Live Track</strong> section.</div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-outline btn-sm" onclick="closeM('m-book-confirm')">Close</button><button class="btn btn-blue btn-sm" onclick="closeM('m-book-confirm');cNav('track',null)">📍 Track Live Now →</button></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><div class="toast-bar" id="toast-bar" style="background:var(--blue)"></div><div class="toast-text"><h4 id="toast-title">Done</h4><p id="toast-body">Action completed.</p></div></div>
+
+<script>
+/* ══════════════ DATA ══════════════ */
+
+const BOOKINGS=[
+  {id:'SRV-2851',c:'Priya Reddy',s:'⚡ Electrician',w:'Ravi Kumar',d:'Mar 6·10:34',a:'₹850',st:'enroute'},
+  {id:'SRV-2850',c:'Ramu Rao',s:'🔧 Plumber',w:'Suresh Babu',d:'Mar 6·09:15',a:'₹620',st:'inprogress'},
+  {id:'SRV-2849',c:'Sunita Devi',s:'🏠 Housekeeping',w:'Prabhavati',d:'Mar 6·08:00',a:'₹400',st:'completed'},
+  {id:'SRV-2848',c:'Vijay Kumar',s:'❄️ AC Service',w:'—',d:'Mar 6·11:00',a:'₹1,200',st:'pending'},
+  {id:'SRV-2847',c:'Lavanya S.',s:'🎨 Painter',w:'Murali Reddy',d:'Mar 7·09:00',a:'₹2,400',st:'scheduled'},
+  {id:'SRV-2846',c:'Arun Teja',s:'🔩 Carpenter',w:'Venkata Naidu',d:'Mar 5·14:00',a:'₹1,800',st:'completed'},
+  {id:'SRV-2845',c:'Meena Kumari',s:'🔧 Plumber',w:'Suresh Babu',d:'Mar 5·10:00',a:'₹550',st:'completed'},
+  {id:'SRV-2844',c:'Srinivasa Rao',s:'⚡ Electrician',w:'Ravi Kumar',d:'Mar 5·08:30',a:'₹700',st:'completed'},
+];
+const WORKERS=[
+  {i:'RK',n:'Ravi Kumar',t:'⚡ Electrician',e:'6yr',j:340,r:4.9,l:'2.3km',id:'✅',s:'available',bg:'rgba(37,99,235,.08)',c:'var(--blue)'},
+  {i:'SB',n:'Suresh Babu',t:'🔧 Plumber',e:'8yr',j:512,r:4.8,l:'1.1km',id:'✅',s:'busy',bg:'rgba(234,88,12,.08)',c:'var(--orange)'},
+  {i:'PD',n:'Prabhavati D.',t:'🏠 Housekeeping',e:'4yr',j:218,r:5.0,l:'0.8km',id:'✅',s:'available',bg:'rgba(13,148,136,.08)',c:'var(--teal)'},
+  {i:'MR',n:'Murali Reddy',t:'🎨 Painter',e:'10yr',j:289,r:4.6,l:'3.5km',id:'✅',s:'busy',bg:'rgba(217,119,6,.08)',c:'var(--yellow)'},
+  {i:'VN',n:'Venkata Naidu',t:'🔩 Carpenter',e:'12yr',j:445,r:4.9,l:'5.2km',id:'✅',s:'offline',bg:'rgba(148,163,184,.08)',c:'var(--text3)'},
+  {i:'SK',n:'Srinivas K.',t:'❄️ AC Service',e:'5yr',j:178,r:4.7,l:'1.9km',id:'✅',s:'available',bg:'rgba(22,163,74,.08)',c:'var(--green)'},
+  {i:'AR',n:'Anuradha R.',t:'🏠 Housekeeping',e:'3yr',j:134,r:4.8,l:'1.2km',id:'⏳',s:'available',bg:'rgba(124,58,237,.08)',c:'var(--purple)'},
+  {i:'BK',n:'Babu Kishore',t:'🔧 Plumber',e:'5yr',j:201,r:4.5,l:'4.0km',id:'✅',s:'available',bg:'rgba(37,99,235,.08)',c:'var(--blue)'},
+];
+const CUSTOMERS=[
+  {n:'Priya Reddy',ph:'+91 98765 43210',addr:'Gandhi Nagar, Ongole',bk:12,last:'Today',sp:'₹8,400'},
+  {n:'Ramu Rao',ph:'+91 87654 32101',addr:'Srinivas Colony',bk:7,last:'Today',sp:'₹4,340'},
+  {n:'Sunita Devi',ph:'+91 76543 21012',addr:'Station Road',bk:19,last:'Today',sp:'₹7,600'},
+  {n:'Vijay Kumar',ph:'+91 65432 10123',addr:'Muthukur Rd',bk:4,last:'Today',sp:'₹3,200'},
+  {n:'Lavanya S.',ph:'+91 54321 01234',addr:'Narsapur Colony',bk:8,last:'Yesterday',sp:'₹9,600'},
+  {n:'Arun Teja',ph:'+91 43210 12345',addr:'Trunk Road',bk:5,last:'Mar 5',sp:'₹6,200'},
+  {n:'Meena Kumari',ph:'+91 32101 23456',addr:'RTC Colony',bk:11,last:'Mar 5',sp:'₹5,500'},
+  {n:'Srinivasa Rao',ph:'+91 21012 34567',addr:'Seetharampuram',bk:16,last:'Mar 5',sp:'₹11,200'},
+];
+const VACANCIES=[
+  {r:'Plumber',ic:'🔧',o:40,ap:127,p:'₹500–900',t:'Full/Part',st:'active'},
+  {r:'Electrician',ic:'⚡',o:35,ap:98,p:'₹700–1,200',t:'Full-time',st:'active'},
+  {r:'House Help',ic:'🏠',o:50,ap:214,p:'₹300–600',t:'Part-time',st:'active'},
+  {r:'AC Technician',ic:'❄️',o:15,ap:31,p:'₹800–1,500',t:'Full-time',st:'urgent'},
+  {r:'Carpenter',ic:'🔩',o:25,ap:56,p:'₹600–1,100',t:'Contract',st:'active'},
+  {r:'Painter',ic:'🎨',o:20,ap:43,p:'₹600–1,000',t:'Contract',st:'active'},
+];
+const ACTIVITY=[
+  {ic:'📋',bg:'rgba(37,99,235,.08)',t:'New booking #SRV-2851',b:'Priya Reddy booked Electrician service',tm:'2 min ago'},
+  {ic:'📍',bg:'rgba(217,119,6,.08)',t:'Worker En Route — Ravi Kumar',b:'Heading to Priya Reddy · 2.3km',tm:'5 min ago'},
+  {ic:'✅',bg:'rgba(22,163,74,.08)',t:'Booking completed #SRV-2849',b:'Prabhavati completed Housekeeping',tm:'18 min ago'},
+  {ic:'👷',bg:'rgba(234,88,12,.08)',t:'New worker registered',b:'Kiran Devi joined as Gardener',tm:'34 min ago'},
+  {ic:'⭐',bg:'rgba(217,119,6,.08)',t:'5★ review received',b:'Priya Reddy rated Ravi Kumar — Excellent!',tm:'1 hr ago'},
+  {ic:'❌',bg:'rgba(220,38,38,.08)',t:'Booking cancelled #SRV-2843',b:'Bhavani D. cancelled Housekeeping',tm:'2 hr ago'},
+  {ic:'💰',bg:'rgba(22,163,74,.08)',t:'Payment received',b:'₹620 for #SRV-2846 via UPI',tm:'5 hr ago'},
+];
+const C_WORKERS=[
+  {ic:'🔧',n:'Plumber',d:'Pipe repairs, installations, drainage. Experience preferred.',o:40,p:'₹500–900/day',t:'Full/Part'},
+  {ic:'⚡',n:'Electrician',d:'Home wiring, switches, panel installation. ITI preferred.',o:35,p:'₹700–1,200/day',t:'Full-time'},
+  {ic:'🏠',n:'House Help',d:'Cleaning, cooking, general housework. No exp needed.',o:50,p:'₹300–600/day',t:'Part-time'},
+  {ic:'🎨',n:'Painter',d:'Interior & exterior painting, texture work.',o:20,p:'₹600–1,000/day',t:'Contract'},
+  {ic:'❄️',n:'AC Technician',d:'AC installation, gas refill, servicing.',o:15,p:'₹800–1,500/day',t:'Full-time'},
+  {ic:'🔩',n:'Carpenter',d:'Custom furniture, modular kitchens, fitting.',o:25,p:'₹600–1,100/day',t:'Part/Project'},
+];
+
+const ST_BADGE={
+  pending:'<span class="bx bx-r"><span class="d"></span>Pending</span>',
+  enroute:'<span class="bx bx-y"><span class="d"></span>En Route</span>',
+  inprogress:'<span class="bx bx-b"><span class="d"></span>In Progress</span>',
+  completed:'<span class="bx bx-g"><span class="d"></span>Completed</span>',
+  scheduled:'<span class="bx bx-p">Scheduled</span>',
+};
+const WK_BADGE={
+  available:'<span class="bx bx-g"><span class="d"></span>Available</span>',
+  busy:'<span class="bx bx-y"><span class="d"></span>Busy</span>',
+  offline:'<span class="bx bx-gr">Offline</span>',
+};
+
+
+/* ══════════════════════════════════════════
+   AUTH ENGINE — OTP FLOW
+   Users: { phone → { password, role, name } }
+══════════════════════════════════════════ */
+const ADMIN = { u:'admin', p:'admin@123' };
+const USERS = {};          // registered accounts (session-scoped)
+const AUTH  = {            // current auth state machine
+  role:'customer',
+  phone:'',
+  otp:'',
+  otpExpiry:0,
+  resendTimer:null,
+};
+
+/* ── tab switch ── */
+function lTab(t){
+  ['c','w','a'].forEach(x=>document.getElementById('tab-'+x).classList.toggle('on',x===t));
+  clearMsg();
+  if(t==='a'){
+    hide('flow-cw'); show('form-a');
+    setHdr('Admin Login','Enter your admin credentials');
+  } else {
+    show('flow-cw'); hide('form-a');
+    AUTH.role = (t==='w') ? 'worker' : 'customer';
+    Object.keys(USERS).length ? goSignIn() : goRegister();
+  }
+}
+
+/* ── register flow ── */
+function goRegister(){
+  clearMsg();
+  ['step-otp','step-pwd','step-signin'].forEach(hide);
+  show('step-phone');
+  show('step-indicator');
+  setStep(1);
+  const isW = AUTH.role==='worker';
+  setHdr(isW?'Worker Registration':'Customer Registration',
+         'Verify your mobile number to create your account');
+  document.getElementById('send-otp-btn').className='lbtn '+(isW?'lbtn-w':'lbtn-c');
+}
+
+/* ── sign-in flow ── */
+function goSignIn(){
+  clearMsg();
+  ['step-phone','step-otp','step-pwd'].forEach(hide);
+  show('step-signin');
+  hide('step-indicator');
+  const isW = AUTH.role==='worker';
+  setHdr(isW?'Worker Sign In':'Customer Sign In',
+         'Enter your phone and password to continue');
+  document.getElementById('signin-btn').className='lbtn '+(isW?'lbtn-w':'lbtn-c');
+  // show masked locked phone
+  const phones=Object.keys(USERS);
+  const dp=document.getElementById('locked-phone-display');
+  if(dp) dp.textContent = phones.length ? maskPhone(phones[phones.length-1]) : '';
+}
+
+/* called from "Already registered?" link */
+function showSignIn(){ goSignIn(); }
+function showRegister(){ goRegister(); }
+
+/* ── phone input ── */
+function onPhoneInput(el){
+  el.value = el.value.replace(/[^\d+\s\-()]/g,'');
+  document.getElementById('send-otp-btn').disabled =
+    el.value.replace(/\D/g,'').length < 10;
+}
+
+/* ── send OTP ── */
+function sendOTP(){
+  clearMsg();
+  const raw = document.getElementById('ph-input').value.trim();
+  if(raw.replace(/\D/g,'').length < 10){
+    showErr('Enter a valid 10-digit mobile number.'); return;
+  }
+
+  // Check if phone already registered — redirect to sign-in
+  if(findUser(raw)){
+    showErr('This number is already registered. Please sign in.');
+    AUTH.phone = raw;
+    setTimeout(goSignIn, 900); return;
+  }
+
+  AUTH.phone = raw;
+  AUTH.otp   = String(Math.floor(100000 + Math.random()*900000));
+  AUTH.otpExpiry = Date.now() + 5*60*1000;
+
+  const btn = document.getElementById('send-otp-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="sending-dots"><span></span><span></span><span></span></span> Sending OTP…';
+
+  setTimeout(()=>{
+    hide('step-phone'); show('step-otp');
+    setStep(2);
+    document.getElementById('ph-display').textContent  = maskPhone(AUTH.phone);
+    document.getElementById('ph-display2').textContent = maskPhone(AUTH.phone);
+    document.getElementById('sms-otp-display').textContent = AUTH.otp.split('').join(' ');
+    resetBoxes();
+    document.getElementById('o1').focus();
+    document.getElementById('verify-otp-btn').disabled = true;
+    startResend();
+    showSuc('OTP sent to '+maskPhone(AUTH.phone)+' — see preview above (demo mode).');
+    btn.innerHTML = 'Send OTP →';
+    btn.disabled  = false;
+  }, 1600);
+}
+
+/* ── resend ── */
+function reSendOTP(){
+  AUTH.otp = String(Math.floor(100000 + Math.random()*900000));
+  AUTH.otpExpiry = Date.now() + 5*60*1000;
+  document.getElementById('sms-otp-display').textContent = AUTH.otp.split('').join(' ');
+  resetBoxes();
+  document.getElementById('verify-otp-btn').disabled = true;
+  document.getElementById('o1').focus();
+  startResend();
+  clearMsg(); showSuc('New OTP generated — check the preview above.');
+}
+
+function startResend(){
+  clearInterval(AUTH.resendTimer);
+  let s = 30;
+  show('resend-timer'); hide('resend-btn');
+  const tick = ()=>{
+    const el=document.getElementById('resend-sec');
+    if(el) el.textContent=s;
+    if(--s < 0){
+      clearInterval(AUTH.resendTimer);
+      hide('resend-timer'); show('resend-btn');
+      document.getElementById('resend-btn').className='resend-link';
+    }
+  };
+  tick();
+  AUTH.resendTimer = setInterval(tick, 1000);
+}
+
+/* ── OTP boxes ── */
+function resetBoxes(){
+  for(let i=1;i<=6;i++){
+    const b=document.getElementById('o'+i);
+    b.value=''; b.className='otp-box';
+  }
+}
+function otpInput(el,idx){
+  el.value = el.value.replace(/\D/g,'').slice(-1);
+  el.classList.toggle('filled', !!el.value);
+  el.classList.remove('wrong');
+  if(el.value && idx<6) document.getElementById('o'+(idx+1)).focus();
+  const all=[1,2,3,4,5,6].every(i=>document.getElementById('o'+i).value!=='');
+  document.getElementById('verify-otp-btn').disabled=!all;
+  if(all) setTimeout(verifyOTP,350);
+}
+function otpKey(e,idx){
+  if(e.key==='Backspace'){
+    const el=document.getElementById('o'+idx);
+    if(!el.value && idx>1) document.getElementById('o'+(idx-1)).focus();
+  }
+  if(e.key==='ArrowLeft'&&idx>1) document.getElementById('o'+(idx-1)).focus();
+  if(e.key==='ArrowRight'&&idx<6) document.getElementById('o'+(idx+1)).focus();
+}
+
+/* ── verify OTP ── */
+function verifyOTP(){
+  clearMsg();
+  const entered=[1,2,3,4,5,6].map(i=>document.getElementById('o'+i).value).join('');
+  if(entered.length<6){ showErr('Enter all 6 digits.'); return; }
+  if(Date.now()>AUTH.otpExpiry){ shakeBoxes(); showErr('OTP expired. Please resend.'); return; }
+  if(entered!==AUTH.otp){ shakeBoxes(); showErr('Incorrect OTP — try again.'); return; }
+
+  clearInterval(AUTH.resendTimer);
+  showSuc('✅ Phone verified! Now set your password.');
+  setTimeout(()=>{ hide('step-otp'); show('step-pwd'); setStep(3);
+    document.getElementById('pwd1').focus(); }, 700);
+}
+function shakeBoxes(){
+  for(let i=1;i<=6;i++){
+    const b=document.getElementById('o'+i);
+    b.classList.add('wrong');
+    setTimeout(()=>b.classList.remove('wrong'),400);
+  }
+}
+function goBackToPhone(){
+  clearMsg(); clearInterval(AUTH.resendTimer);
+  hide('step-otp'); show('step-phone'); setStep(1);
+}
+
+/* ── password strength ── */
+function checkPwdStrength(v){
+  const fill=document.getElementById('pwd-fill');
+  const txt =document.getElementById('pwd-txt');
+  if(!v){fill.style.width='0%';txt.textContent='Enter a password';txt.style.color='var(--text3)';return;}
+  let sc=0;
+  if(v.length>=6)sc++; if(v.length>=10)sc++;
+  if(/[A-Z]/.test(v))sc++; if(/[0-9]/.test(v))sc++; if(/[^A-Za-z0-9]/.test(v))sc++;
+  const L=[{w:'16%',c:'var(--red)',t:'Very Weak'},{w:'35%',c:'var(--orange)',t:'Weak'},
+            {w:'57%',c:'var(--yellow)',t:'Fair'},{w:'80%',c:'var(--teal)',t:'Strong'},
+            {w:'100%',c:'var(--green)',t:'Very Strong'}];
+  const l=L[Math.min(sc,4)];
+  fill.style.width=l.w; fill.style.background=l.c;
+  txt.textContent=l.t; txt.style.color=l.c;
+}
+
+/* ── set password & lock account ── */
+function setPassword(){
+  clearMsg();
+  const p1=document.getElementById('pwd1').value;
+  const p2=document.getElementById('pwd2').value;
+  if(p1.length<6){ showErr('Password must be at least 6 characters.'); return; }
+  if(p1!==p2){ showErr('Passwords do not match.'); return; }
+
+  // 🔒 Lock: store phone → {password, role, name}
+  const displayName = AUTH.role==='worker' ? 'Worker' : 'Customer';
+  USERS[AUTH.phone] = { password:p1, role:AUTH.role, name:displayName };
+
+  setStep(4);
+  showSuc('🎉 Account created! Phone '+maskPhone(AUTH.phone)+' is now locked to this account.');
+
+  setTimeout(()=> finishLogin(AUTH.phone, AUTH.role), 1100);
+}
+
+/* ── sign in (returning user) ── */
+function signIn(){
+  clearMsg();
+  const phone=document.getElementById('si-phone').value.trim();
+  const pwd  =document.getElementById('si-pwd').value;
+  if(!phone||!pwd){ showErr('Enter your phone number and password.'); return; }
+  const user=findUser(phone);
+  if(!user){ showErr('No account found. Please register first.'); return; }
+  if(user.password!==pwd){ showErr('Incorrect password. Please try again.'); return; }
+  finishLogin(phone, user.role);
+}
+
+function findUser(phone){
+  if(USERS[phone]) return USERS[phone];
+  const d=phone.replace(/\D/g,'');
+  for(const k in USERS) if(k.replace(/\D/g,'')===d) return USERS[k];
+  return null;
+}
+
+/* ── forgot password ── */
+function forgotPwd(){
+  clearMsg();
+  hide('step-signin'); show('step-phone');
+  show('step-indicator'); setStep(1);
+  setHdr('Reset Password','Re-verify your phone to set a new password');
+  showSuc('Enter your registered phone to receive an OTP.');
+}
+
+/* ── complete login ── */
+function finishLogin(phone, role){
+  const user = USERS[phone] || { name: role==='worker'?'Worker':'Customer' };
+  const av=document.getElementById('c-av');
+  const nm=document.getElementById('c-nm');
+  if(av){ av.textContent=user.name.slice(0,2).toUpperCase(); av.className='u-av '+(role==='worker'?'w':'c'); }
+  if(nm) nm.textContent=user.name+' · '+maskPhone(phone);
+  document.getElementById('login-screen').classList.add('gone');
+  document.getElementById('app-customer').classList.add('on');
+  initCustomer();
+  toast('👋','Welcome!','Signed in as '+(role==='worker'?'Worker':'Customer')+' · '+maskPhone(phone));
+}
+
+/* ── admin login ── */
+function loginA(){
+  clearMsg();
+  const u=document.getElementById('a-u').value.trim();
+  const p=document.getElementById('a-p').value.trim();
+  if(!u||!p){ showErr('Username and password are required.'); return; }
+  if(u!==ADMIN.u||p!==ADMIN.p){
+    showErr('Access denied — incorrect admin credentials.');
+    document.getElementById('a-p').value=''; return;
+  }
+  document.getElementById('login-screen').classList.add('gone');
+  document.getElementById('app-admin').classList.add('on');
+  initAdmin();
+  toast('🔐','Admin Access Granted','Welcome, Super Admin');
+}
+
+/* ── logout ── */
+function doLogout(){
+  document.querySelectorAll('.app').forEach(a=>a.classList.remove('on'));
+  document.getElementById('login-screen').classList.remove('gone');
+  clearMsg();
+  lTab('c');
+  const pi=document.getElementById('ph-input'); if(pi) pi.value='';
+}
+
+/* ── helpers ── */
+function maskPhone(p){
+  const d=p.replace(/\D/g,'');
+  if(d.length>=10) return d.slice(0,2)+'*'.repeat(d.length-4)+d.slice(-2);
+  return p.slice(0,3)+'***'+p.slice(-2);
+}
+function setHdr(t,s){
+  document.getElementById('lr-title').textContent=t;
+  document.getElementById('lr-sub').textContent=s;
+}
+function setStep(active){
+  [1,2,3,4].forEach(i=>{
+    const n=document.getElementById('si'+i);
+    const l=document.getElementById('sl'+i);
+    if(i<active){n.className='si-num done';l.className='si-label done';n.textContent='✓';}
+    else if(i===active){n.className='si-num active';l.className='si-label active';if(i<4)n.textContent=i;}
+    else{n.className='si-num idle';l.className='si-label';if(i<4)n.textContent=i;}
+  });
+  ['sep12','sep23','sep34'].forEach((id,idx)=>{
+    const el=document.getElementById(id);
+    if(el) el.className='si-sep'+(active>idx+1?' done':'');
+  });
+}
+function show(id){const el=document.getElementById(id);if(el)el.style.display='block';}
+function hide(id){const el=document.getElementById(id);if(el)el.style.display='none';}
+function showErr(m){
+  document.getElementById('l-err-msg').textContent=m;
+  document.getElementById('l-err').classList.add('show');
+  document.getElementById('l-suc').classList.remove('show');
+}
+function showSuc(m){
+  document.getElementById('l-suc-msg').textContent=m;
+  document.getElementById('l-suc').classList.add('show');
+  document.getElementById('l-err').classList.remove('show');
+}
+function clearMsg(){
+  document.getElementById('l-err').classList.remove('show');
+  document.getElementById('l-suc').classList.remove('show');
+}
+function tpwd(id,eye){
+  const el=document.getElementById(id);
+  el.type=el.type==='password'?'text':'password';
+  eye.textContent=el.type==='password'?'👁':'🙈';
+}
+function fdem(u,p,uv,pv){
+  document.getElementById(u).value=uv;
+  document.getElementById(p).value=pv;
+}
+
+// Enter key → admin login when admin tab active
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  const ls=document.getElementById('login-screen');
+  if(!ls||ls.classList.contains('gone'))return;
+  if(document.getElementById('tab-a').classList.contains('on')) loginA();
+});
+
+
+
+/* ══════════════ NAV ══════════════ */
+const C_TITLES={home:'Home',book:'Book Service',track:'Live Track',workers:'Workers',vacancies:'Vacancies',mybookings:'My Bookings',contact:'Contact Us'};
+const A_TITLES={overview:'Dashboard',analytics:'Analytics',bookings:'All Bookings','workers-mgmt':'Workers','customers-mgmt':'Customers','vacancies-mgmt':'Vacancies','live-tracking':'Live Tracking',activity:'Activity Log',settings:'Settings'};
+
+function cNav(v,el){
+  document.querySelectorAll('#app-customer .view').forEach(x=>x.classList.remove('on'));
+  document.getElementById('cv-'+v)?.classList.add('on');
+  if(el){document.querySelectorAll('#app-customer .nav-item').forEach(x=>x.classList.remove('on'));el.classList.add('on');}
+  document.getElementById('c-title').textContent=C_TITLES[v]||v;
+  if(v==='workers')renderCWorkers();
+  if(v==='vacancies')renderCVac();
+}
+function aN(v,el){
+  document.querySelectorAll('#app-admin .view').forEach(x=>x.classList.remove('on'));
+  document.getElementById('av-'+v)?.classList.add('on');
+  if(el){document.querySelectorAll('#app-admin .nav-item').forEach(x=>x.classList.remove('on','admin-on'));el.classList.add('on','admin-on');}
+  document.getElementById('a-title').textContent=A_TITLES[v]||v;
+  if(v==='bookings')renderABookings();
+  if(v==='workers-mgmt')renderAWorkers();
+  if(v==='customers-mgmt')renderACustomers();
+  if(v==='vacancies-mgmt')renderAVac();
+  if(v==='activity')renderActivity();
+}
+
+/* ══════════════ RENDER ══════════════ */
+function renderCWorkers(){
+  const el=document.getElementById('c-wk-list');if(!el)return;
+  el.innerHTML=WORKERS.map(w=>`<div class="wk-card">
+    <div class="wk-top"><div class="wk-av" style="background:${w.bg};color:${w.c}">${w.i}</div>
+    <div><div class="wk-name">${w.n}</div><div class="wk-trade">${w.t}</div></div>${WK_BADGE[w.s]}</div>
+    <div class="wk-meta"><span>📍 ${w.l}</span><span><span class="stars">★★★★${w.r>=4.8?'★':'☆'}</span> ${w.r}</span><span>✅ ${w.j} jobs</span></div>
+    <div class="wk-acts">
+      <button class="btn btn-blue btn-sm" style="flex:1" onclick="toast('📋','Booking','Booking ${w.n}');cNav('book',null)">Book</button>
+      <button class="btn btn-blue-soft btn-sm" onclick="cNav('track',null)">📍 Track</button>
+      <button class="btn btn-teal-soft btn-sm" onclick="toast('📞','Calling','Connecting to ${w.n}')">📞</button>
+    </div></div>`).join('');
+}
+function renderCVac(){
+  const el=document.getElementById('c-vac-list');if(!el)return;
+  el.innerHTML=C_WORKERS.map(v=>`<div class="vac">
+    <div class="vac-ico">${v.ic}</div>
+    <div class="vac-body"><h3>${v.n}</h3><p>${v.d}</p>
+    <div class="vac-tags"><span class="bx bx-g">${v.o} openings</span><span class="bx bx-gr">${v.t}</span><span class="bx bx-t">${v.p}</span></div></div>
+    <button class="btn btn-blue btn-sm" style="align-self:center;white-space:nowrap" onclick="toast('💼','Apply Now','Opening application form')">Apply Now</button>
+  </div>`).join('');
+}
+
+function renderABookings(){
+  const el=document.getElementById('a-bookings-tbody');if(!el)return;
+  el.innerHTML=BOOKINGS.map(b=>`<tr onclick="openM('m-booking-detail')">
+    <td><input type="checkbox" onclick="e.stopPropagation()"/></td>
+    <td class="td-mn">${b.id}</td>
+    <td><div class="td-fw">${b.c}</div></td>
+    <td>${b.s}</td>
+    <td>${b.w==='—'?'<span style="color:var(--red);font-size:.7rem;font-weight:700">Unassigned</span>':b.w}</td>
+    <td style="font-size:.72rem">${b.d}</td>
+    <td style="color:var(--green);font-weight:700">${b.a}</td>
+    <td>${ST_BADGE[b.st]||''}</td>
+    <td onclick="event.stopPropagation()"><div class="td-acts">
+      <button class="btn btn-ghost btn-sm" onclick="openM('m-booking-detail')">View</button>
+      ${b.st==='pending'?`<button class="btn btn-orange btn-sm" onclick="toast('👷','Assigning','Finding nearest worker')">Assign</button>`:''}
+      ${b.st==='inprogress'?`<button class="btn btn-green btn-sm" onclick="toast('✅','Done','Booking complete!')">Done</button>`:''}
+      ${b.st==='enroute'?`<button class="btn btn-blue-soft btn-sm" onclick="toast('📍','Tracking','Opened map')">Track</button>`:''}
+      <button class="btn btn-red btn-sm" onclick="toast('❌','Cancelled','Booking cancelled')">✕</button>
+    </div></td>
+  </tr>`).join('');
+}
+function renderAWorkers(){
+  const el=document.getElementById('a-workers-tbody');if(!el)return;
+  el.innerHTML=WORKERS.map(w=>`<tr onclick="openM('m-worker-detail')">
+    <td><input type="checkbox" onclick="event.stopPropagation()"/></td>
+    <td><div style="display:flex;align-items:center;gap:7px;"><div style="width:26px;height:26px;border-radius:7px;background:${w.bg};color:${w.c};display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;font-family:var(--mono);flex-shrink:0">${w.i}</div><div class="td-fw">${w.n}</div></div></td>
+    <td>${w.t}</td><td>${w.e}</td>
+    <td style="color:var(--green);font-weight:700">${w.j}</td>
+    <td><span class="stars">★★★★${w.r>=4.8?'★':'☆'}</span> ${w.r}</td>
+    <td style="font-size:.72rem;color:var(--text2)">${w.l}</td>
+    <td>${w.id}</td>
+    <td>${WK_BADGE[w.s]}</td>
+    <td onclick="event.stopPropagation()"><div class="td-acts">
+      <button class="btn btn-ghost btn-sm" onclick="openM('m-worker-detail')">View</button>
+      <button class="btn btn-red btn-sm" onclick="toast('🚫','Suspended','Worker suspended')">Ban</button>
+    </div></td>
+  </tr>`).join('');
+}
+function renderACustomers(){
+  const el=document.getElementById('a-customers-tbody');if(!el)return;
+  el.innerHTML=CUSTOMERS.map(c=>`<tr>
+    <td><div class="td-fw">${c.n}</div></td>
+    <td class="td-mn">${c.ph}</td>
+    <td style="font-size:.72rem;color:var(--text2)">${c.addr}</td>
+    <td style="color:var(--blue);font-weight:700">${c.bk}</td>
+    <td style="font-size:.72rem;color:var(--text3)">${c.last}</td>
+    <td style="color:var(--green);font-weight:700">${c.sp}</td>
+    <td><div class="td-acts"><button class="btn btn-ghost btn-sm">View</button><button class="btn btn-orange btn-sm" onclick="openM('m-add-booking')">Book</button></div></td>
+  </tr>`).join('');
+}
+function renderAVac(){
+  const el=document.getElementById('a-vac-tbody');if(!el)return;
+  el.innerHTML=VACANCIES.map(v=>`<tr>
+    <td class="td-fw">${v.r}</td><td>${v.ic}</td>
+    <td style="color:var(--blue);font-weight:700">${v.o}</td>
+    <td style="color:var(--green);font-weight:700">${v.ap}</td>
+    <td>${v.p}</td><td>${v.t}</td>
+    <td>${v.st==='urgent'?'<span class="bx bx-y">Urgent</span>':'<span class="bx bx-g">Active</span>'}</td>
+    <td><div class="td-acts">
+      <button class="btn btn-blue-soft btn-sm" onclick="toast('📋','Applications','Reviewing')">Review</button>
+      <button class="btn btn-ghost btn-sm" onclick="toast('✏️','Edit','Opening form')">Edit</button>
+      <button class="btn btn-red btn-sm" onclick="toast('🗑️','Deleted','Removed')">✕</button>
+    </div></td>
+  </tr>`).join('');
+}
+function renderActivity(){
+  const el=document.getElementById('a-activity-feed');if(!el)return;
+  el.innerHTML=ACTIVITY.map(a=>`<div class="feed-item"><div class="feed-ico" style="background:${a.bg}">${a.ic}</div>
+    <div class="feed-body"><h4>${a.t}</h4><p>${a.b}</p></div>
+    <span class="feed-time">${a.tm}</span></div>`).join('');
+}
+function renderRecentBookings(){
+  const el=document.getElementById('a-recent-tbody');if(!el)return;
+  el.innerHTML=BOOKINGS.slice(0,4).map(b=>`<tr onclick="openM('m-booking-detail')">
+    <td class="td-mn">${b.id}</td>
+    <td><div class="td-fw">${b.c}</div></td>
+    <td>${b.s}</td>
+    <td>${b.w==='—'?'<span style="color:var(--red);font-size:.7rem;font-weight:700">—</span>':b.w}</td>
+    <td>${ST_BADGE[b.st]||''}</td>
+    <td onclick="event.stopPropagation()">
+      ${b.st==='pending'?`<button class="btn btn-orange btn-sm" onclick="event.stopPropagation();toast('👷','Assigning','Finding worker')">Assign</button>`:''}
+      ${b.st==='enroute'||b.st==='inprogress'?`<button class="btn btn-blue-soft btn-sm" onclick="event.stopPropagation();toast('📍','Track','Opened')">Track</button>`:''}
+    </td>
+  </tr>`).join('');
+}
+function renderLiveWorkers(){
+  const el=document.getElementById('a-live-workers');if(!el)return;
+  el.innerHTML=WORKERS.slice(0,5).map(w=>`<div class="feed-item" onclick="openM('m-worker-detail')">
+    <div class="feed-ico" style="background:${w.bg};color:${w.c};font-size:.7rem;font-weight:800;font-family:var(--mono)">${w.i}</div>
+    <div class="feed-body"><h4>${w.n}</h4><p>${w.t} · ${w.l}</p></div>
+    <div style="text-align:right">${WK_BADGE[w.s]}<div style="font-size:.6rem;color:var(--text3);margin-top:2px">⭐ ${w.r}</div></div>
+  </div>`).join('');
+}
+function buildBarChart(){
+  const vals=[28,42,35,51,47,62,38];
+  const max=Math.max(...vals);
+  const el=document.getElementById('a-bar-chart');if(!el)return;
+  el.innerHTML=vals.map(v=>`<div class="bc-bar-wrap">
+    <div class="bc-v or">${v}</div>
+    <div class="bc-bar or" style="height:${Math.round((v/max)*98)}px" title="${v} bookings"></div>
+  </div>`).join('');
+}
+
+function initAdmin(){buildBarChart();renderRecentBookings();renderLiveWorkers();}
+function initCustomer(){renderCWorkers();renderCVac();}
+
+/* ══════════════ CHIPS ══════════════ */
+function cOn(el,cls){el.closest('.filters').querySelectorAll('.chip').forEach(c=>c.classList.remove('on','or'));el.classList.add('on');if(cls)el.classList.add(cls);}
+
+/* ══════════════ BOOKING ══════════════ */
+function pickSvc(el,nm){
+  document.querySelectorAll('#book-svc-grid .svc-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');document.getElementById('book-svc-name').value=nm;
+}
+function confirmBooking(){
+  const svc=document.getElementById('book-svc-name').value||'General Service';
+  document.getElementById('m-bc-svc').textContent=svc;
+  openM('m-book-confirm');
+}
+
+/* ══════════════ MODALS ══════════════ */
+function openM(id){document.getElementById(id).classList.add('open');}
+function closeM(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+
+/* ══════════════ CLOCK ══════════════ */
+setInterval(()=>{
+  const t=new Date().toLocaleTimeString('en-IN',{hour12:false});
+  const cc=document.getElementById('c-clk'),ac=document.getElementById('a-clk');
+  if(cc)cc.textContent=t;if(ac)ac.textContent=t;
+},1000);
+
+/* ══════════════ TOAST ══════════════ */
+let tT;
+function toast(ico,ttl,bdy){
+  document.getElementById('toast-title').textContent=ico+' '+ttl;
+  document.getElementById('toast-body').textContent=bdy;
+  const t=document.getElementById('toast');
+  t.classList.add('show');clearTimeout(tT);
+  tT=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+/* ══════════════ 
+   GPS SIMULATION ENGINE
+   Realistic worker movement toward customer
+══════════════ */
+// Worker starts far, moves toward YOU (46%, 61%)
+const YOU = {x:46, y:61};
+// waypoints = route from worker to customer (simplified city path)
+const ROUTE_WAYPOINTS = [
+  {x:71, y:38},  // start (worker location)
+  {x:71, y:45},  // move south along vertical road
+  {x:58, y:45},  // turn west along horizontal road
+  {x:58, y:61},  // move south
+  {x:46, y:61},  // arrive at YOU
+];
+
+let gpsState = {
+  routeIdx: 0,        // current segment
+  progress: 0,        // 0..1 within segment
+  wx: 71, wy: 38,    // current worker position (%)
+  speed: 0.012,       // progress per tick (simulate 22 km/h)
+  lat: 15.5182, lng: 80.0287,
+  distKm: 2.8,
+  etaMin: 12,
+  arrived: false,
+  updateCount: 0,
+};
+
+function lerpPos(a, b, t){ return {x: a.x+(b.x-a.x)*t, y: a.y+(b.y-a.y)*t}; }
+function calcDist(ax,ay,bx,by){ return Math.sqrt((ax-bx)**2+(ay-by)**2)*0.062; } // scale px% to km approx
+
+function gpsUpdate(){
+  if(gpsState.arrived) return;
+
+  const segStart = ROUTE_WAYPOINTS[gpsState.routeIdx];
+  const segEnd   = ROUTE_WAYPOINTS[Math.min(gpsState.routeIdx+1, ROUTE_WAYPOINTS.length-1)];
+  gpsState.progress += gpsState.speed + (Math.random()-0.5)*0.003;
+
+  if(gpsState.progress >= 1){
+    gpsState.progress = 0;
+    gpsState.routeIdx++;
+    if(gpsState.routeIdx >= ROUTE_WAYPOINTS.length-1){
+      // arrived!
+      gpsState.arrived = true;
+      gpsState.wx = YOU.x; gpsState.wy = YOU.y;
+      gpsState.etaMin = 0; gpsState.distKm = 0;
+      setTimeout(()=>{
+        toast('🎉','Worker Arrived!','Suresh Babu has reached your location');
+        document.getElementById('eta-text').textContent='Arrived!';
+      },400);
+      // Reset after 8 seconds for demo loop
+      setTimeout(()=>{
+        gpsState={...gpsState,routeIdx:0,progress:0,wx:71,wy:38,lat:15.5182,lng:80.0287,distKm:2.8,etaMin:12,arrived:false};
+      },8000);
+      return;
+    }
+  }
+
+  const pos = lerpPos(segStart, segEnd, gpsState.progress);
+  // Add tiny jitter for realism
+  gpsState.wx = pos.x + (Math.random()-0.5)*0.4;
+  gpsState.wy = pos.y + (Math.random()-0.5)*0.3;
+
+  // Update GPS coords (simulate real lat/lng movement)
+  const totalProgress = (gpsState.routeIdx + gpsState.progress) / (ROUTE_WAYPOINTS.length-1);
+  gpsState.lat = 15.5182 - totalProgress * 0.013 + (Math.random()-0.5)*0.0002;
+  gpsState.lng = 80.0287 - totalProgress * 0.022 + (Math.random()-0.5)*0.0002;
+  gpsState.distKm = Math.max(0.1, 2.8 * (1-totalProgress)).toFixed(1)*1;
+  gpsState.etaMin = Math.max(0, Math.round(12 * (1-totalProgress)));
+  gpsState.updateCount++;
+
+  // Update customer map
+  const workerPin = document.getElementById('pin-worker');
+  const carDot = document.getElementById('car-dot');
+  if(workerPin){
+    workerPin.style.left = gpsState.wx.toFixed(2)+'%';
+    workerPin.style.top  = gpsState.wy.toFixed(2)+'%';
+  }
+  if(carDot){
+    carDot.style.left = gpsState.wx.toFixed(2)+'%';
+    carDot.style.top  = gpsState.wy.toFixed(2)+'%';
+  }
+
+  // Update GPS overlay
+  const gLat=document.getElementById('gps-lat');
+  const gLng=document.getElementById('gps-lng');
+  const gSpd=document.getElementById('gps-spd');
+  const gDist=document.getElementById('gps-dist');
+  const gTime=document.getElementById('gps-time');
+  if(gLat) gLat.textContent=gpsState.lat.toFixed(4);
+  if(gLng) gLng.textContent=gpsState.lng.toFixed(4);
+  if(gSpd){const spd=18+Math.round(Math.random()*12);gSpd.textContent=spd+' km/h';}
+  if(gDist) gDist.textContent=gpsState.distKm+' km';
+  if(gTime) gTime.textContent=(gpsState.updateCount%3===0?'just now':'2s ago');
+
+  // Update ETA displays
+  const etaMin=document.getElementById('eta-min');
+  const etaDist=document.getElementById('eta-dist-card');
+  const etaText=document.getElementById('eta-text');
+  const liveEta=document.getElementById('live-eta-card');
+  if(etaMin) etaMin.textContent=gpsState.etaMin;
+  if(etaDist) etaDist.textContent=gpsState.distKm+' km';
+  if(etaText) etaText.textContent='~'+gpsState.etaMin+' min';
+  if(liveEta) liveEta.textContent=gpsState.etaMin;
+
+  // Update pin label
+  const pinLbl=document.getElementById('worker-pin-label');
+  if(pinLbl) pinLbl.textContent='Suresh · '+gpsState.distKm+'km 🏍';
+
+  // Draw route on SVG
+  drawRoute(totalProgress);
+
+  // Update admin map workers too
+  updateAdminPins();
+}
+
+function drawRoute(progress){
+  const svg=document.getElementById('routeSvg');
+  if(!svg)return;
+  const canvas=svg.closest('.map-canvas');
+  if(!canvas)return;
+  const W=canvas.offsetWidth||600, H=canvas.offsetHeight||380;
+
+  // Build full route points
+  const fullPts=ROUTE_WAYPOINTS.map(p=>`${p.x/100*W},${p.y/100*H}`).join(' ');
+  const workerPt=`${gpsState.wx/100*W},${gpsState.wy/100*H}`;
+  const youPt=`${YOU.x/100*W},${YOU.y/100*H}`;
+
+  // Remaining route from worker to you
+  let remaining=[];
+  remaining.push(workerPt);
+  for(let i=gpsState.routeIdx+1;i<ROUTE_WAYPOINTS.length;i++){
+    remaining.push(`${ROUTE_WAYPOINTS[i].x/100*W},${ROUTE_WAYPOINTS[i].y/100*H}`);
+  }
+
+  const routeLine=document.getElementById('route-line');
+  const routeShadow=document.getElementById('route-shadow');
+  const routeDone=document.getElementById('route-done');
+  if(routeLine) routeLine.setAttribute('points',remaining.join(' '));
+  if(routeShadow) routeShadow.setAttribute('points',remaining.join(' '));
+
+  // Completed route
+  let done=[`${ROUTE_WAYPOINTS[0].x/100*W},${ROUTE_WAYPOINTS[0].y/100*H}`];
+  for(let i=1;i<=gpsState.routeIdx;i++) done.push(`${ROUTE_WAYPOINTS[i].x/100*W},${ROUTE_WAYPOINTS[i].y/100*H}`);
+  done.push(workerPt);
+  if(routeDone) routeDone.setAttribute('points',done.join(' '));
+}
+
+// Admin map — multiple workers moving independently
+const ADMIN_PINS=[
+  {id:'a-pin-sb',x:65,y:42,dx:-.18,dy:.12},
+  {id:'a-pin-rk',x:22,y:38,dx:.08,dy:.06},
+  {id:'a-pin-pd',x:48,y:68,dx:.05,dy:-.04},
+  {id:'a-pin-mr',x:78,y:30,dx:-.06,dy:.08},
+  {id:'a-pin-sk',x:35,y:55,dx:.10,dy:-.07},
+];
+ADMIN_PINS.forEach(p=>{p.cx=p.x;p.cy=p.y;});
+
+function updateAdminPins(){
+  ADMIN_PINS.forEach(p=>{
+    p.cx+=p.dx*(0.8+Math.random()*0.4);
+    p.cy+=p.dy*(0.8+Math.random()*0.4);
+    if(p.cx>85||p.cx<10){p.dx=-p.dx;}
+    if(p.cy>82||p.cy<12){p.dy=-p.dy;}
+    const el=document.getElementById(p.id);
+    if(el){el.style.left=p.cx.toFixed(2)+'%';el.style.top=p.cy.toFixed(2)+'%';}
+  });
+  // Update admin stats
+  const syncEl=document.getElementById('admin-sync');
+  if(syncEl)syncEl.textContent='just now';
+}
+
+setInterval(gpsUpdate, 2500); // every 2.5 seconds
+
+/* ══════════════ LIVE WORKER FEED SHUFFLE ══════════════ */
+setInterval(()=>{
+  const items=document.querySelectorAll('#a-live-workers .feed-item');
+  if(!items.length)return;
+  const r=items[Math.floor(Math.random()*items.length)];
+  const bx=r.querySelector('.bx');if(!bx)return;
+  const opts=[
+    {cls:'bx bx-g',html:'<span class="d"></span>Available'},
+    {cls:'bx bx-y',html:'<span class="d"></span>Busy'},
+    {cls:'bx bx-b',html:'<span class="d"></span>In Job'},
+  ];
+  const o=opts[Math.floor(Math.random()*opts.length)];
+  bx.className=o.cls;bx.innerHTML=o.html;
+},5500);
+
+/* ══════════════ LIVE ACTIVITY INJECTION ══════════════ */
+const LIVE_EVTS=[
+  {ic:'📋',bg:'rgba(37,99,235,.08)',t:'New booking received',b:'Auto-assigning nearest available worker'},
+  {ic:'💰',bg:'rgba(22,163,74,.08)',t:'Payment confirmed',b:'₹850 received via UPI'},
+  {ic:'⭐',bg:'rgba(217,119,6,.08)',t:'New 5★ review',b:'Customer rated service Excellent!'},
+  {ic:'👷',bg:'rgba(234,88,12,.08)',t:'Worker came online',b:'Anuradha R. is now available · 1.2km'},
+  {ic:'🔔',bg:'rgba(124,58,237,.08)',t:'Booking reminder sent',b:'SMS sent for scheduled booking tomorrow'},
+];
+let evtIdx=0;
+setInterval(()=>{
+  const feed=document.getElementById('a-activity-feed');
+  if(!feed||!feed.closest('.view.on'))return;
+  const e=LIVE_EVTS[evtIdx++%LIVE_EVTS.length];
+  const d=document.createElement('div');
+  d.className='feed-item';
+  d.style.cssText='animation:vfade .4s ease;background:rgba(37,99,235,.025)';
+  d.innerHTML=`<div class="feed-ico" style="background:${e.bg}">${e.ic}</div>
+    <div class="feed-body"><h4>${e.t}</h4><p>${e.b}</p></div>
+    <span class="feed-time">just now</span>`;
+  feed.insertBefore(d,feed.firstChild);
+  setTimeout(()=>d.style.background='',2000);
+  if(feed.children.length>14)feed.removeChild(feed.lastChild);
+},9000);
+</script>
+</body>
+</html>
